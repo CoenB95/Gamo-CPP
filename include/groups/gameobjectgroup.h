@@ -1,26 +1,24 @@
 #pragma once
 
-#include <mutex>
-#include <vector>
+#include "objects/gameobject.h"
 
-#include "include/objects/gameobject.h"
+namespace gamo {
+	class GameObjectGroup : public GameObject {
+	private:
+		vector<GameObject*> children;
+		mutex childrenMutex;
 
-using namespace std;
+	public:
+		GameObjectGroup();
+		~GameObjectGroup();
 
-class GameObjectGroup : public GameObject {
-private:
-	vector<GameObject*> children;
-	mutex childrenMutex;
+		virtual void build(vec3 offset) override;
+		virtual void draw(const mat4& parentModelMatrix) override;
+		virtual void update(float elapsedSeconds) override;
 
-public:
-	GameObjectGroup();
-	~GameObjectGroup();
-
-	void addChild(GameObject* object);
-	virtual void build(vec3 offset) override;
-	void deleteAllChildren();
-	void deleteChild(GameObject* object);
-	virtual void draw(const mat4& parentModelMatrix) override;
-	virtual void update(float elapsedSeconds) override;
-	void removeChild(GameObject* object);
-};
+		void addChild(GameObject* object);
+		void deleteAllChildren();
+		void deleteChild(GameObject* object);
+		void removeChild(GameObject* object);
+	};
+}

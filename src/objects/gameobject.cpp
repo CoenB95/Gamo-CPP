@@ -1,12 +1,10 @@
 #include <iostream>
-#include <GL/glew.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#include "gameobject.h"
-#include "gameobjectcomponent.h"
-#include "gameobjectgroup.h"
-#include "shaders.h"
+#include "components/gameobjectcomponent.h"
+#include "groups/gameobjectgroup.h"
+#include "objects/gameobject.h"
 
 using namespace std;
 

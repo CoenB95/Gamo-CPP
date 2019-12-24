@@ -1,6 +1,4 @@
-#include "gameobjectgroup.h"
-
-using namespace std;
+#include "groups/gameobjectgroup.h"
 
 GameObjectGroup::GameObjectGroup() {
 
@@ -21,7 +19,7 @@ void GameObjectGroup::addChild(GameObject* object) {
 
 void GameObjectGroup::build(vec3 offsetPosition) {
 	GameObject::build(offsetPosition);
-	for (GLuint i = 0; i < children.size(); i++) {
+	for (size_t i = 0; i < children.size(); i++) {
 		if (children[i]->shouldRebuild()) {
 			children[i]->buildStandalone();
 		}

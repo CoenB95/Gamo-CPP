@@ -1,18 +1,17 @@
 #pragma once
 
-#include "include/groups/gameobjectgroup.h"
+#include "components/gameobjectcomponent.h"
+#include "groups/gameobjectgroup.h"
 
-using namespace std;
+namespace gamo {
+	class DespawnComponent : public GameObjectComponent {
+	private:
+		GameObjectGroup* parentGroup;
+		float secondsLeft;
 
-class GameObjectGroup;
+	public:
+		DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, string tag = "");
 
-class DespawnComponent : public GameObjectComponent {
-private:
-	GameObjectGroup* parentGroup;
-	float secondsLeft;
-
-public:
-	DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, string tag = "");
-
-	void onUpdate(float elapsedSeconds);
-};
+		void onUpdate(float elapsedSeconds);
+	};
+}

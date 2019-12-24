@@ -1,8 +1,4 @@
-#include "include/components/despawncomponent.h"
-
-#include "include/groups/gameobjectgroup.h"
-
-using namespace std;
+#include "components/despawncomponent.h"
 
 DespawnComponent::DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, string tag) : GameObjectComponent(tag) {
 	this->parentGroup = parentGroup;

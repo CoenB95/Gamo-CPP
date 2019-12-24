@@ -1,5 +1,4 @@
-#include "gameobject.h"
-#include "gameobjectcomponent.h"
+#include "components/gameobjectcomponent.h"
 
 GameObjectComponent::GameObjectComponent(string tag) : tag(tag) {
 

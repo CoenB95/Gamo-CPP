@@ -1,14 +1,16 @@
 #pragma once
 
-#include "gameobjectcomponent.h"
+#include "components/gameobjectcomponent.h"
 
-class SpinComponent : public GameObjectComponent {
-private:
-	float degreesPerSec;
-	float value;
+namespace gamo {
+	class SpinComponent : public GameObjectComponent {
+	private:
+		float degreesPerSec;
+		float value;
 
-public:
-	SpinComponent(float degreesPerSec, string tag = "");
+	public:
+		SpinComponent(float degreesPerSec, string tag = "");
 
-	void onUpdate(float elapsedSeconds);
-};
+		void onUpdate(float elapsedSeconds);
+	};
+}
