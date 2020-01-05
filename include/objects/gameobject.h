@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "shaders/vertex.h"
+#include "shaders/shader.h"
 
 using namespace gamo;
 using namespace glm;
@@ -32,7 +33,7 @@ namespace gamo {
 		quat orientation;
 		vec3 scale = vec3(1, 1, 1);
 		vec3 pivot = vec3(0, 0, 0);
-		vector<VertexP3N3T2> vertices;
+		vector<Vertex> vertices;
 		mutex verticesMutex;
 
 		GameObject();
@@ -40,7 +41,7 @@ namespace gamo {
 		GameObject(GameObject& other);
 
 		//Draws the object
-		virtual void draw(const mat4& parentModelMatrix);
+		virtual void draw(Shader* shader, const mat4& transform = mat4());
 		//Updates the object 
 		virtual void update(float elapsedSeconds);
 

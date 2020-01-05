@@ -46,20 +46,19 @@ void GameObjectGroup::deleteChild(GameObject* object) {
 	}
 }
 
-void GameObjectGroup::draw(const mat4& parentModelMatrix) {
-	GameObject::draw(parentModelMatrix);
+void GameObjectGroup::draw(Shader* shader, const mat4& transform) {
+	GameObject::draw(shader, transform);
 
 	if (children.empty())
 		return;
 
-	mat4 modelMatrix = calcModelMatrix(parentModelMatrix);
 	vector<GameObject*> childrenCopy;
 	{
 		lock_guard<mutex> lock(childrenMutex);
 		childrenCopy = children;
 	}
 	for (GameObject* child : childrenCopy) {
-		child->draw(modelMatrix);
+		child->draw(shader, transform * Shader::compose(position, orientation, scale));
 	}
 }
 

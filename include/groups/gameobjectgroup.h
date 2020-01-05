@@ -13,7 +13,7 @@ namespace gamo {
 		~GameObjectGroup();
 
 		virtual void build(vec3 offset) override;
-		virtual void draw(const mat4& parentModelMatrix) override;
+		virtual void draw(Shader* shader, const mat4& parentModelMatrix) override;
 		virtual void update(float elapsedSeconds) override;
 
 		void addChild(GameObject* object);

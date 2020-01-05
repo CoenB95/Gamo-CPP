@@ -1,15 +1,16 @@
 #pragma once
 
 #include "components/gameobjectcomponent.h"
+#include "shaders/texture.h"
 
-using namespace gamo {
+namespace gamo {
 	class TextureDrawComponent : public GameObjectComponent {
 	private:
-		vrlib::Texture* texture;
+		Texture* texture;
 
 	public:
 		TextureDrawComponent(const string& fileName);
 
-		void onDraw() override;
+		void onDraw(Shader* shader, const mat4& transform) override;
 	};
 }

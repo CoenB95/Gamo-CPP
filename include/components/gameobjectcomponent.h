@@ -15,7 +15,7 @@ namespace gamo {
 
 		inline virtual void onAttach(GameObject* newParent) {};
 		inline virtual void onBuild(vec3 offset) {};
-		inline virtual void onDraw() {};
+		inline virtual void onDraw(Shader* shader, const mat4& transform) {};
 		inline virtual void onUpdate(float elapsedSeconds) {};
 		void setParent(GameObject* object);
 	};

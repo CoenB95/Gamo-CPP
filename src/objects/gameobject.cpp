@@ -48,14 +48,6 @@ void GameObject::buildStandalone(bool pivotAsCenter) {
 	build(pivotAsCenter ? -pivot : vec3(0, 0, 0));
 }
 
-mat4 GameObject::calcModelMatrix(const mat4& parentModelMatrix) {
-	mat4 modelMatrix = parentModelMatrix;
-	modelMatrix = glm::translate(modelMatrix, position * vec3(1.0f, 1.0f, 1.0f));
-	modelMatrix = glm::scale(modelMatrix, scale);
-	modelMatrix *= glm::toMat4(orientation);
-	return modelMatrix;
-}
-
 void GameObject::deleteAllComponents() {
 	lock_guard<mutex> lock(componentsMutex);
 	for (GameObjectComponent* component : components) {
@@ -76,12 +68,9 @@ void GameObject::deleteComponent(GameObjectComponent* component) {
 	}
 }
 
-void GameObject::draw(const mat4& parentModelMatrix) {
+void GameObject::draw(Shader* shader, const mat4& transform) {
 	if (components.empty())
 		return;
-
-	mat4 modelMatrix = calcModelMatrix(parentModelMatrix);
-	Shaders::setModelMatrix(modelMatrix);
 
 	vector<GameObjectComponent*> componentsCopy;
 	{
@@ -89,7 +78,7 @@ void GameObject::draw(const mat4& parentModelMatrix) {
 		componentsCopy = components;
 	}
 	for (GameObjectComponent* component : componentsCopy) {
-		component->onDraw();
+		component->onDraw(shader, transform * Shader::compose(position, orientation, scale));
 	}
 }
 
@@ -99,7 +88,7 @@ GameObjectComponent* GameObject::findComponentByTag(string tag) {
 
 	lock_guard<mutex> lock(componentsMutex);
 	for (GameObjectComponent* component : components) {
-		if (component->getTag() == tag)
+		if (component->tag == tag)
 			return component;
 	}
 
