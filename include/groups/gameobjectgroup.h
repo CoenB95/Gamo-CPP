@@ -12,7 +12,7 @@ namespace gamo {
 		GameObjectGroup();
 		~GameObjectGroup();
 
-		virtual void build(vec3 offset) override;
+		virtual void build(vector<Vertex>& vertices) override;
 		virtual void draw(Shader* shader, const mat4& parentModelMatrix) override;
 		virtual void update(float elapsedSeconds) override;
 

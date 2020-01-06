@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "groups/gameobjectgroup.h"
 
 GameObjectGroup::GameObjectGroup() {
@@ -17,11 +19,20 @@ void GameObjectGroup::addChild(GameObject* object) {
 	children.push_back(object);
 }
 
-void GameObjectGroup::build(vec3 offsetPosition) {
-	GameObject::build(offsetPosition);
-	for (size_t i = 0; i < children.size(); i++) {
-		if (children[i]->shouldRebuild()) {
-			children[i]->buildStandalone();
+void GameObjectGroup::build(vector<Vertex>& vertices) {
+	GameObject::build(vertices);
+
+	if (children.empty())
+		return;
+
+	vector<GameObject*> childrenCopy;
+	{
+		lock_guard<mutex> lock(childrenMutex);
+		childrenCopy = children;
+	}
+	for (GameObject* child : childrenCopy) {
+		if (child->shouldRebuild()) {
+			child->build(vertices);
 		}
 	}
 };

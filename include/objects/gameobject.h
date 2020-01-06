@@ -8,7 +8,6 @@
 #include "shaders/vertex.h"
 #include "shaders/shader.h"
 
-using namespace gamo;
 using namespace glm;
 using namespace std;
 
@@ -21,10 +20,6 @@ namespace gamo {
 		vector<GameObjectComponent*> components;
 		mutex componentsMutex;
 		bool dirty = true;
-
-	protected:
-		//Called when the object should (re)build its vertices to represent its current state. Could be called from a worker thread.
-		virtual void build(vec3 offsetPosition);
 
 	public:
 		GameObjectGroup* parent;
@@ -40,16 +35,15 @@ namespace gamo {
 		virtual ~GameObject();
 		GameObject(GameObject& other);
 
-		//Draws the object
+		// Builds the object (called from worker thread)
+		void build() { build(vertices); }
+		virtual void build(vector<Vertex>& vertices);
+		// Draws the object
 		virtual void draw(Shader* shader, const mat4& transform = mat4());
-		//Updates the object 
+		// Updates the object 
 		virtual void update(float elapsedSeconds);
 
 		void addComponent(GameObjectComponent* component);
-		//Builds the object as being part of a parent mesh. Meaning its current position is used to determine vertice positions.
-		void buildEmbedded(vec3 offset = vec3(0, 0, 0));
-		//Builds the object as being a standalone mesh. Meaning its current position is ignored when determining vertice positions.
-		void buildStandalone(bool pivotAsCenter = true);
 		mat4 calcModelMatrix(const mat4& parentModelMatrix = mat4());
 		void deleteAllComponents();
 		void deleteComponent(GameObjectComponent* component);	
