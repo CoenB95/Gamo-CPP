@@ -102,8 +102,8 @@ namespace gamo {
             }
         };
 
-        inline static AttribArray p3n3t2(const std::string& p3, const std::string& n3, const std::string& t2) {
-            return AttribArray({Attribute::vec3(p3), Attribute::vec3(n3), Attribute::vec2(t2)});
+        inline static AttribArray* p3n3t2(const std::string& p3, const std::string& n3, const std::string& t2) {
+            return new AttribArray({Attribute::vec3(p3), Attribute::vec3(n3), Attribute::vec2(t2)});
         };
     };
 }
