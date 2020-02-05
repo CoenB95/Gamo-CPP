@@ -5,24 +5,24 @@
 #include <mutex>
 #include <vector>
 
+#include "components/gameobjectcomponent.h"
 #include "shaders/vertex.h"
 #include "shaders/shader.h"
 
 namespace gamo {
-	class GameObjectComponent;
-	class GameObjectGroup;
-
 	class GameObject {
 	private:
+		std::vector<GameObject*> children;
+		std::mutex childrenMutex;
 		std::vector<GameObjectComponent*> components;
 		std::mutex componentsMutex;
 		bool dirty = true;
 
 	public:
-		GameObjectGroup* parent;
+		GameObject* parent = nullptr;
 
-		glm::vec3 position;
-		glm::quat orientation;
+		glm::vec3 position = glm::vec3();
+		glm::quat orientation = glm::quat();
 		glm::vec3 scale = glm::vec3(1, 1, 1);
 		glm::vec3 pivot = glm::vec3(0, 0, 0);
 		std::vector<Vertex> vertices;
@@ -30,6 +30,7 @@ namespace gamo {
 
 		GameObject() { };
 		virtual ~GameObject() {
+			deleteAllChildren();
 			deleteAllComponents();
 		};
 
@@ -46,6 +47,7 @@ namespace gamo {
 		virtual void build(std::vector<Vertex>& vertices) {
 			dirty = false;
 
+			// Build self.
 			std::vector<GameObjectComponent*> componentsCopy;
 			{
 				std::lock_guard<std::mutex> lock(componentsMutex);
@@ -54,14 +56,23 @@ namespace gamo {
 			for (GameObjectComponent* component : componentsCopy) {
 				component->onBuild(vertices);
 			}
+
+			// Build children.
+			std::vector<GameObject*> childrenCopy;
+			{
+				std::lock_guard<std::mutex> lock(childrenMutex);
+				childrenCopy = children;
+			}
+			for (GameObject* child : childrenCopy) {
+				if (child->shouldRebuild()) {
+					child->build(vertices);
+				}
+			}
 		};
 
 		// Draws the object
 		virtual void draw(Shader* shader, const glm::mat4& transform = glm::mat4()) {
-			if (components.empty()) {
-				return;
-			}
-
+			// Draw self.
 			std::vector<GameObjectComponent*> componentsCopy;
 			{
 				std::lock_guard<std::mutex> lock(componentsMutex);
@@ -70,15 +81,21 @@ namespace gamo {
 			for (GameObjectComponent* component : componentsCopy) {
 				component->onDraw(shader, transform * Shader::compose(position, orientation, scale));
 			}
+
+			// Draw children.
+			std::vector<GameObject*> childrenCopy;
+			{
+				std::lock_guard<std::mutex> lock(childrenMutex);
+				childrenCopy = children;
+			}
+			for (GameObject* child : childrenCopy) {
+				child->draw(shader, transform * Shader::compose(position, orientation, scale));
+			}
 		};
 
 		// Updates the object 
 		virtual void update(float elapsedSeconds) {
-			if (components.empty()) {
-				return;
-			}
-
-			//Iterate on a copy so that components can remove themselves.
+			// Update self. Iterate on a copy so that they can remove themselves.
 			std::vector<GameObjectComponent*> componentsCopy;
 			{
 				std::lock_guard<std::mutex> lock(componentsMutex);
@@ -87,6 +104,26 @@ namespace gamo {
 			for (GameObjectComponent* component : componentsCopy) {
 				component->onUpdate(elapsedSeconds);
 			}
+
+			// Update children. Iterate on a copy so that they can remove themselves.
+			std::vector<GameObject*> childrenCopy;
+			{
+				std::lock_guard<std::mutex> lock(childrenMutex);
+				childrenCopy = children;
+			}
+			for (GameObject* child : childrenCopy) {
+				child->update(elapsedSeconds);
+			}
+		};
+
+		void addChild(GameObject* object) {
+			if (object == nullptr) {
+				return;
+			}
+
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			object->parent = this;
+			children.push_back(object);
 		};
 
 		void addComponent(GameObjectComponent* component) {
@@ -94,14 +131,34 @@ namespace gamo {
 			std::lock_guard<std::mutex> lock(componentsMutex);
 			components.push_back(component);
 		};
+
+		void deleteAllChildren() {
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			for (GameObject* child : children) {
+				delete child;
+			}
+			children.clear();
+		};
 		
-		glm::mat4 calcModelMatrix(const glm::mat4& parentModelMatrix = glm::mat4());
 		void deleteAllComponents() {
 			std::lock_guard<std::mutex> lock(componentsMutex);
 			for (GameObjectComponent* component : components) {
 				delete component;
 			}
 			components.clear();
+		};
+
+		void deleteChild(GameObject* object) {
+			if (object == nullptr) {
+				return;
+			}
+
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			std::vector<GameObject*>::iterator it = find(children.begin(), children.end(), object);
+			if (it != children.end()) {
+				children.erase(it);
+				delete object;
+			}
 		};
 
 		void deleteComponent(GameObjectComponent* component) {
@@ -140,11 +197,23 @@ namespace gamo {
 			return findComponentByTag(tag) != nullptr;
 		};
 
-		//Notifies that this object has become dirty and should be rebuild.
+		// Notifies that this object has become dirty and should be rebuild.
 		void notifyDirty() {
 			dirty = true;
 			if (parent != nullptr) {
 				parent->notifyDirty();
+			}
+		};
+
+		void removeChild(GameObject* object) {
+			if (object == nullptr) {
+				return;
+			}
+
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			std::vector<GameObject*>::iterator it = find(children.begin(), children.end(), object);
+			if (it != children.end()) {
+				children.erase(it);
 			}
 		};
 

@@ -1,8 +1,11 @@
 #pragma once
 
-#include "objects/gameobject.h"
+#include "shaders/vertex.h"
+#include "shaders/shader.h"
 
 namespace gamo {
+	class GameObject;
+
 	class GameObjectComponent {
 	protected:
 		GameObject* parentObject;
