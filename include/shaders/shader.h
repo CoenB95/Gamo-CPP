@@ -9,7 +9,7 @@
 #include "shaders/vertex.h"
 
 namespace gamo {
-  enum DrawMode {
+  enum class DrawMode {
     POINTS,
     TRIANGLES,
     TRIANGLE_STRIP
@@ -20,9 +20,9 @@ namespace gamo {
     const std::string name;
     GLint id;
 
-    Uniform(std::string name);
+    Uniform(std::string name) : name(name) { };
 
-    virtual void update();
+    virtual void update() = 0;
   };
 
   class Matrix4Uniform : public Uniform {
@@ -67,7 +67,7 @@ namespace gamo {
     glm::mat4 projectionMatrix;
     AttribArray* attributeArray = nullptr;
     //vector<Attribute> attributes;
-    std::vector<Uniform> uniforms;
+    std::vector<Uniform*> uniforms;
     //gl.Program _program;
     //gl.Shader _fragShader, _vertShader;
 
@@ -82,15 +82,16 @@ namespace gamo {
     };
 
     void initFromFiles(const std::string& vertShaderFileName, const std::string& fragShaderFileName,
-        AttribArray* attributeArray, const std::vector<Uniform>& uniforms) {
+        AttribArray* attributeArray, const std::vector<Uniform*>& uniforms) {
       initFromSources(readShaderFile(vertShaderFileName), readShaderFile(fragShaderFileName), attributeArray, uniforms);
     };
 
     void initFromSources(const std::string& vertShaderSrc, const std::string& fragShaderSrc,
-        AttribArray* attributeArray, const std::vector<Uniform>& uniforms) {
+        AttribArray* attributeArray, const std::vector<Uniform*>& uniforms) {
       //this->attributes.push_back(attributes);
       //_uniforms.addAll(uniforms);
       this->attributeArray = attributeArray;
+      this->uniforms.insert(this->uniforms.end(), uniforms.begin(), uniforms.end());
 
 			fragShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 			const char* fragSrc = fragShaderSrc.c_str();
@@ -116,9 +117,9 @@ namespace gamo {
         attributeArray->link(programId);
       }
 
-      for (Uniform uniform : uniforms) {
-        GLint uniformLocation = glGetUniformLocation(programId, uniform.name.c_str());
-        uniform.id = uniformLocation;
+      for (Uniform* uniform : uniforms) {
+        GLint uniformLocation = glGetUniformLocation(programId, uniform->name.c_str());
+        uniform->id = uniformLocation;
       }
     }
 
@@ -134,8 +135,8 @@ namespace gamo {
 
     void draw(const std::vector<Vertex>& vertices, const glm::mat4& transform, DrawMode mode) {
       modelMatrix = transform;
-      for (Uniform uniform : uniforms) {
-        uniform.update();
+      for (Uniform* uniform : uniforms) {
+        uniform->update();
       }
       attributeArray->bind(vertices);
 
