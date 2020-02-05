@@ -6,7 +6,7 @@
 namespace gamo {
     class Vertex {
     public:
-        virtual void bindAttribArray(const std::vector<Vertex>& vertices);
+        virtual void bindAttribArray(const std::vector<Vertex>& vertices) = 0;
     };
     
     struct VertexP3C4 : public Vertex {
