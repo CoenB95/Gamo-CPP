@@ -1,12 +1,14 @@
 #include "components/gameobjectcomponent.h"
 
-GameObjectComponent::GameObjectComponent(string tag) : tag(tag) {
+namespace gamo {
+	GameObjectComponent::GameObjectComponent(std::string tag) : tag(tag) {
 
-}
+	}
 
-void GameObjectComponent::setParent(GameObject* newParent) {
-	parentObject = newParent;
-	onAttach(parentObject);
+	void GameObjectComponent::setParent(GameObject* newParent) {
+		parentObject = newParent;
+		onAttach(parentObject);
+	}
 }
 
 

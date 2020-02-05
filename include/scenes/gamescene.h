@@ -2,11 +2,13 @@
 
 #include "gameobject.h"
 
-class GameScene {
-private:
-	vector<GameObject*> objects;
+namespace gamo {
+	class GameScene {
+	private:
+		std::vector<GameObject*> objects;
 
-public:
-	GameScene();
-	void addObject(GameObject* object);
-};
+	public:
+		GameScene();
+		void addObject(GameObject* object);
+	};
+}

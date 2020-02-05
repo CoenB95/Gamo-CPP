@@ -5,9 +5,9 @@
 namespace gamo {
     class SmoothComponent : public GameObjectComponent {
     private:
-        quat previousOrientation;
-	    vec3 previousPosition;
-        vec3 previousScale;
+        glm::quat previousOrientation;
+	    glm::vec3 previousPosition;
+        glm::vec3 previousScale;
 	    
 	    bool rotate;
         bool scale;

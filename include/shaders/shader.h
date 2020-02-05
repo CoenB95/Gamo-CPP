@@ -8,10 +8,6 @@
 
 #include "shaders/vertex.h"
 
-using namespace gamo;
-using namespace glm;
-using namespace std;
-
 namespace gamo {
   enum DrawMode {
     POINTS,
@@ -64,30 +60,30 @@ namespace gamo {
 
   class Uniform {
   public:
-    const string name;
+    const std::string name;
     GLint id;
 
-    Uniform(string name);
+    Uniform(std::string name);
 
     virtual void update();
   };
 
   class Matrix4Uniform : public Uniform {
   private:
-    function<mat4()> bindValue;
+    std::function<glm::mat4()> bindValue;
 
   public:
-    Matrix4Uniform(string name, const function<mat4()>& valueBind) : Uniform(name), bindValue(valueBind) { };
+    Matrix4Uniform(std::string name, const std::function<glm::mat4()>& valueBind) : Uniform(name), bindValue(valueBind) { };
 
     inline void update() override { glUniformMatrix4fv(id, 1, false, glm::value_ptr(bindValue())); }
   };
 
   class IntegerUniform : public Uniform {
   private:
-    function<int()> bindValue;
+    std::function<int()> bindValue;
 
   public:
-    IntegerUniform(const string& name, const function<int()> valueBind) : Uniform(name), bindValue(valueBind) { };
+    IntegerUniform(const std::string& name, const std::function<int()> valueBind) : Uniform(name), bindValue(valueBind) { };
 
     inline void update() override { glUniform1i(id, bindValue()); }
   };
@@ -162,32 +158,32 @@ namespace gamo {
     GLuint programId;
 
   public:
-    mat4 modelMatrix;
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
+    glm::mat4 modelMatrix;
+    glm::mat4 viewMatrix;
+    glm::mat4 projectionMatrix;
     AttribArray* attributeArray = nullptr;
     //vector<Attribute> attributes;
-    vector<Uniform> uniforms;
+    std::vector<Uniform> uniforms;
     //gl.Program _program;
     //gl.Shader _fragShader, _vertShader;
 
     Shader() { };
 
-    inline static mat4& Shader::compose(const vec3& position, const quat& orientation, const vec3& scale) {
-	    mat4 modelMatrix = mat4();
+    inline static glm::mat4& Shader::compose(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale) {
+	    glm::mat4 modelMatrix = glm::mat4();
 	    modelMatrix = glm::translate(modelMatrix, position);
 	    modelMatrix = glm::scale(modelMatrix, scale);
 	    modelMatrix *= glm::toMat4(orientation);
 	    return modelMatrix;
     };
 
-    void initFromFiles(const string& vertShaderFileName, const string& fragShaderFileName,
-        AttribArray* attributeArray, const vector<Uniform>& uniforms) {
+    void initFromFiles(const std::string& vertShaderFileName, const std::string& fragShaderFileName,
+        AttribArray* attributeArray, const std::vector<Uniform>& uniforms) {
       initFromSources(readShaderFile(vertShaderFileName), readShaderFile(fragShaderFileName), attributeArray, uniforms);
     };
 
-    void initFromSources(const string& vertShaderSrc, const string& fragShaderSrc,
-        AttribArray* attributeArray, const vector<Uniform>& uniforms) {
+    void initFromSources(const std::string& vertShaderSrc, const std::string& fragShaderSrc,
+        AttribArray* attributeArray, const std::vector<Uniform>& uniforms) {
       //this->attributes.push_back(attributes);
       //_uniforms.addAll(uniforms);
       this->attributeArray = attributeArray;
@@ -222,17 +218,17 @@ namespace gamo {
       }
     }
 
-    string readShaderFile(const string& fileName) {
-      ifstream shaderFile(fileName);
-      string data = "";
-      string line;
+    std::string readShaderFile(const std::string& fileName) {
+      std::ifstream shaderFile(fileName);
+      std::string data = "";
+      std::string line;
 			while (shaderFile.good() && getline(shaderFile, line)) {
         data += line + "/n";
       }
       return data;
     }
 
-    void draw(const vector<Vertex>& vertices, const mat4& transform, DrawMode mode) {
+    void draw(const std::vector<Vertex>& vertices, const glm::mat4& transform, DrawMode mode) {
       modelMatrix = transform;
       for (Uniform uniform : uniforms) {
         uniform.update();

@@ -8,12 +8,10 @@
 #include <string>
 #include "stb_image.h"
 
-using namespace std;
-
 namespace gamo {
   class Texture {
   private:
-    static map<string, Texture*> cache;
+    static std::map<std::string, Texture*> cache;
 
     GLuint id = -1;
     stbi_uc* data;
@@ -66,7 +64,7 @@ namespace gamo {
       bind();
     }
 
-    static Texture* loadCached(const string& fileName, bool filterNearest = false, bool repeatTexture = true) {
+    static Texture* loadCached(const std::string& fileName, bool filterNearest = false, bool repeatTexture = true) {
 		  if (cache.find(fileName) == cache.end()) {
 			  Texture* tex = loadImage(fileName, filterNearest, repeatTexture);
         if (tex != nullptr) {
@@ -85,8 +83,8 @@ namespace gamo {
 			
       if (data == nullptr) {
 				const char* err = stbi_failure_reason();
-				cout << "Error loading file " << filename << endl;
-				cout << err << endl;
+				std::cout << "Error loading file " << filename << std::endl;
+				std::cout << err << std::endl;
 				return nullptr;
 			}
 

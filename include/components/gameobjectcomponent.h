@@ -8,14 +8,14 @@ namespace gamo {
 		GameObject* parentObject;
 
 	public:
-		const string tag;
+		const std::string tag;
 
-		GameObjectComponent(string tag = "");
+		GameObjectComponent(std::string tag = "");
 		virtual ~GameObjectComponent() {};
 
 		inline virtual void onAttach(GameObject* newParent) {};
-		inline virtual void onBuild(vector<Vertex>& vertices) {};
-		inline virtual void onDraw(Shader* shader, const mat4& transform) {};
+		inline virtual void onBuild(std::vector<Vertex>& vertices) {};
+		inline virtual void onDraw(Shader* shader, const glm::mat4& transform) {};
 		inline virtual void onUpdate(float elapsedSeconds) {};
 		void setParent(GameObject* object);
 	};

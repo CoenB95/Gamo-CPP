@@ -9,7 +9,7 @@ namespace gamo {
 		float value;
 
 	public:
-		SpinComponent(float degreesPerSec, string tag = "");
+		SpinComponent(float degreesPerSec, std::string tag = "");
 
 		void onUpdate(float elapsedSeconds);
 	};

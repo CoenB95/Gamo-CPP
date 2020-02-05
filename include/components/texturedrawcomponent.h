@@ -9,8 +9,8 @@ namespace gamo {
 		Texture* texture;
 
 	public:
-		TextureDrawComponent(const string& fileName);
+		TextureDrawComponent(const std::string& fileName);
 
-		void onDraw(Shader* shader, const mat4& transform) override;
+		void onDraw(Shader* shader, const glm::mat4& transform) override;
 	};
 }

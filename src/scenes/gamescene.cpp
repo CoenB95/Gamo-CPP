@@ -1,9 +1,11 @@
 #include "gamescene.h"
 
-GameScene::GameScene() {
+namespace gamo {
+	GameScene::GameScene() {
 
-}
+	}
 
-void GameScene::addObject(GameObject* object) {
-	objects.push_back(object);
+	void GameScene::addObject(GameObject* object) {
+		objects.push_back(object);
+	}
 }

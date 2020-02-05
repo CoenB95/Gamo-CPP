@@ -5,15 +5,15 @@
 namespace gamo {
 	class GameObjectGroup : public GameObject {
 	private:
-		vector<GameObject*> children;
-		mutex childrenMutex;
+		std::vector<GameObject*> children;
+		std::mutex childrenMutex;
 
 	public:
 		GameObjectGroup();
 		~GameObjectGroup();
 
-		virtual void build(vector<Vertex>& vertices) override;
-		virtual void draw(Shader* shader, const mat4& parentModelMatrix) override;
+		virtual void build(std::vector<Vertex>& vertices) override;
+		virtual void draw(Shader* shader, const glm::mat4& parentModelMatrix) override;
 		virtual void update(float elapsedSeconds) override;
 
 		void addChild(GameObject* object);

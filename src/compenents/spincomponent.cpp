@@ -2,12 +2,14 @@
 
 #include "components/spincomponent.h"
 
-SpinComponent::SpinComponent(float degreesPerSec, string tag) : GameObjectComponent(tag),
-degreesPerSec(degreesPerSec) {
+namespace gamo {
+	SpinComponent::SpinComponent(float degreesPerSec, std::string tag) : GameObjectComponent(tag),
+			degreesPerSec(degreesPerSec) {
 
-}
+	}
 
-void SpinComponent::onUpdate(float elapsedSeconds) {
-	quat rotationalDelta = quat(vec3(0.0f, glm::radians(degreesPerSec * elapsedSeconds), 0.0f));
-	parentObject->orientation *= rotationalDelta;
+	void SpinComponent::onUpdate(float elapsedSeconds) {
+		glm::quat rotationalDelta = glm::quat(glm::vec3(0.0f, glm::radians(degreesPerSec * elapsedSeconds), 0.0f));
+		parentObject->orientation *= rotationalDelta;
+	}
 }

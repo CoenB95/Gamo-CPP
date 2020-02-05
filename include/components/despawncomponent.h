@@ -10,7 +10,7 @@ namespace gamo {
 		float secondsLeft;
 
 	public:
-		DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, string tag = "");
+		DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, std::string tag = "");
 
 		void onUpdate(float elapsedSeconds);
 	};

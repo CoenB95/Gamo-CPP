@@ -8,28 +8,25 @@
 #include "shaders/vertex.h"
 #include "shaders/shader.h"
 
-using namespace glm;
-using namespace std;
-
 namespace gamo {
 	class GameObjectComponent;
 	class GameObjectGroup;
 
 	class GameObject {
 	private:
-		vector<GameObjectComponent*> components;
-		mutex componentsMutex;
+		std::vector<GameObjectComponent*> components;
+		std::mutex componentsMutex;
 		bool dirty = true;
 
 	public:
 		GameObjectGroup* parent;
 
-		vec3 position;
-		quat orientation;
-		vec3 scale = vec3(1, 1, 1);
-		vec3 pivot = vec3(0, 0, 0);
-		vector<Vertex> vertices;
-		mutex verticesMutex;
+		glm::vec3 position;
+		glm::quat orientation;
+		glm::vec3 scale = glm::vec3(1, 1, 1);
+		glm::vec3 pivot = glm::vec3(0, 0, 0);
+		std::vector<Vertex> vertices;
+		std::mutex verticesMutex;
 
 		GameObject();
 		virtual ~GameObject();
@@ -37,19 +34,19 @@ namespace gamo {
 
 		// Builds the object (called from worker thread)
 		void build() { build(vertices); }
-		virtual void build(vector<Vertex>& vertices);
+		virtual void build(std::vector<Vertex>& vertices);
 		// Draws the object
-		virtual void draw(Shader* shader, const mat4& transform = mat4());
+		virtual void draw(Shader* shader, const glm::mat4& transform = glm::mat4());
 		// Updates the object 
 		virtual void update(float elapsedSeconds);
 
 		void addComponent(GameObjectComponent* component);
-		mat4 calcModelMatrix(const mat4& parentModelMatrix = mat4());
+		glm::mat4 calcModelMatrix(const glm::mat4& parentModelMatrix = glm::mat4());
 		void deleteAllComponents();
 		void deleteComponent(GameObjectComponent* component);	
-		GameObjectComponent* findComponentByTag(string tag);
-		vec3 globalPosition();
-		bool hasComponent(string tag) { return findComponentByTag(tag) != nullptr; };
+		GameObjectComponent* findComponentByTag(std::string tag);
+		glm::vec3 globalPosition();
+		bool hasComponent(std::string tag) { return findComponentByTag(tag) != nullptr; };
 		//Notifies that this object has become dirty and should be rebuild.
 		void notifyDirty();
 		void removeComponent(GameObjectComponent* component);

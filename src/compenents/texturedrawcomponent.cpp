@@ -3,19 +3,23 @@
 
 #include "components/texturedrawcomponent.h"
 
-TextureDrawComponent::TextureDrawComponent(const string& fileName) : GameObjectComponent() {
-	texture = Texture::loadCached(fileName, true);
-}
+namespace gamo {
+	TextureDrawComponent::TextureDrawComponent(const std::string& fileName) : GameObjectComponent() {
+		texture = Texture::loadCached(fileName, true);
+	}
 
-void TextureDrawComponent::onDraw(Shader* shader, const mat4& transform) {
-	lock_guard<mutex> lock(parentObject->verticesMutex);
+	void TextureDrawComponent::onDraw(Shader* shader, const glm::mat4& transform) {
+		std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 
-	if (parentObject->vertices.size() <= 0)
-		return;
+		if (parentObject->vertices.size() <= 0) {
+			return;
+		}
 
-	if (texture == nullptr)
-		return;
+		if (texture == nullptr) {
+			return;
+		}
 
-	texture->use();
-    shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
+		texture->use();
+    	shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
+	}
 }
