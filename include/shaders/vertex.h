@@ -6,7 +6,7 @@
 namespace gamo {
     class Vertex {
     public:
-        virtual void bindAttribArray(const std::vector<Vertex>& vertices) = 0;
+        virtual void bindAttribArray(const std::vector<Vertex>& vertices) { };
     };
     
     struct VertexP3C4 : public Vertex {
@@ -100,6 +100,10 @@ namespace gamo {
                 }
                 attrib.id = attributeLocation;
             }
+        };
+
+        inline static AttribArray* p3c4(const std::string& p3, const std::string& c4) {
+            return new AttribArray({ Attribute::vec3(p3), Attribute::vec4(c4) });
         };
 
         inline static AttribArray* p3n3t2(const std::string& p3, const std::string& n3, const std::string& t2) {

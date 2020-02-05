@@ -9,11 +9,17 @@ namespace gamo {
     Cube() { };
 
   public:
-    static Cube* textured(double size = 1) {
-      Cube* cube = new Cube();
-      cube->addComponent(new SpinComponent(10.0));
-      cube->addComponent(new TexturedCubeBuildComponent(size));
-      cube->addComponent(new TextureDrawComponent("res/terrain.png"));
-    }
+      static Cube* colored(double size = 1) {
+          Cube* cube = new Cube();
+          cube->addComponent(new SpinComponent(10.0));
+          cube->addComponent(new ColoredCubeBuildComponent(size));
+          cube->addComponent(new TextureDrawComponent("res/terrain.png"));
+      };
+      static Cube* textured(double size = 1) {
+          Cube* cube = new Cube();
+          cube->addComponent(new SpinComponent(10.0));
+          cube->addComponent(new TexturedCubeBuildComponent(size));
+          cube->addComponent(new TextureDrawComponent("res/terrain.png"));
+      };
   };
 }

@@ -6,6 +6,8 @@
 #include <gtc/type_ptr.hpp>
 #include <string>
 
+#include <iostream>
+
 #include "shaders/vertex.h"
 
 namespace gamo {
@@ -55,6 +57,24 @@ namespace gamo {
     inline void update() override { glUniform1f(id, bindValue()); }
   };
 
+  bool checkShaderErrors(GLuint shaderId)
+  {
+      GLint status;
+      glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);					//kijk of het compileren is gelukt
+      if (status == GL_FALSE)
+      {
+          int length, charsWritten;
+          glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);				//haal de lengte van de foutmelding op
+          char* infolog = new char[length + 1];
+          memset(infolog, 0, length + 1);
+          glGetShaderInfoLog(shaderId, length, &charsWritten, infolog);		//en haal de foutmelding zelf op
+          std::cout << "Error compiling shader:\n" << infolog << std::endl;
+          delete[] infolog;
+          return true;
+      }
+      return false;
+  }
+
   class Shader {
   private:
     GLuint fragShaderId;
@@ -97,12 +117,24 @@ namespace gamo {
 			const char* fragSrc = fragShaderSrc.c_str();
       glShaderSource(fragShaderId, 1, &fragSrc, NULL);
       glCompileShader(fragShaderId);
+      if (checkShaderErrors(fragShaderId))
+      {
+          glDeleteProgram(programId);
+          programId = -1;
+          throw std::invalid_argument("Could not find attribute '${attrib.name}'");
+      }
 			//printShaderInfoLog(fileName, shaderId);
         
       vertShaderId = glCreateShader(GL_VERTEX_SHADER);
       const char* vertSrc = vertShaderSrc.c_str();
       glShaderSource(vertShaderId, 1, &vertSrc, NULL);
       glCompileShader(vertShaderId);
+      if (checkShaderErrors(vertShaderId))
+      {
+          glDeleteProgram(programId);
+          programId = -1;
+          throw std::invalid_argument("Could not find attribute '${attrib.name}'");
+      }
 
       programId = glCreateProgram();
       glAttachShader(programId, vertShaderId);
@@ -128,7 +160,7 @@ namespace gamo {
       std::string data = "";
       std::string line;
 			while (shaderFile.good() && getline(shaderFile, line)) {
-        data += line + "/n";
+        data += line + "\n";
       }
       return data;
     }
