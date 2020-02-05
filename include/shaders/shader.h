@@ -1,9 +1,9 @@
 #include <functional>
 #include <fstream>
 #include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtx/quaternion.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm.hpp>
+#include <gtx/quaternion.hpp>
+#include <gtc/type_ptr.hpp>
 #include <string>
 
 #include "shaders/vertex.h"
@@ -86,6 +86,16 @@ namespace gamo {
     IntegerUniform(const std::string& name, const std::function<int()> valueBind) : Uniform(name), bindValue(valueBind) { };
 
     inline void update() override { glUniform1i(id, bindValue()); }
+  };
+
+  class FloatUniform : public Uniform {
+  private:
+    std::function<float()> bindValue;
+
+  public:
+    FloatUniform(const std::string& name, const std::function<float()> valueBind) : Uniform(name), bindValue(valueBind) { };
+
+    inline void update() override { glUniform1f(id, bindValue()); }
   };
 
   /*class ArrayBuffer {

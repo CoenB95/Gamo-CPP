@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+#include <glm.hpp>
+#include <gtc/quaternion.hpp>
 #include <mutex>
 #include <vector>
 
