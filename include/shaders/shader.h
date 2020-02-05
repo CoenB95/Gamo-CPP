@@ -15,49 +15,6 @@ namespace gamo {
     TRIANGLE_STRIP
   };
 
-  /*class Attribute {
-  public:
-    const string name;
-    int id;
-    int size;
-    int type;
-
-    void bind() {
-      glEnableVertexAttribArray(id);
-    }
-
-    int getByteCount() {
-      switch (type) {
-        case 0: return 4;
-        default: return 0;
-      }
-    }
-
-    Attribute(string name, int size, int type = GL_FLOAT);
-  };
-
-  class VertexP3AttribArray : Attribute {
-  public:
-    const string name;
-    int id;
-    int size;
-    int type;
-
-    void bind() {
-      Attribute::bind();
-			glVertexAttribPointer(id, 3, GL_FLOAT, GL_FALSE, stride, (void*)(offset + prevSize));
-    }
-
-    int getByteCount() {
-      switch (type) {
-        case 0: return 4;
-        default: return 0;
-      }
-    }
-
-    Attribute(string name, int size, int type = GL_FLOAT);
-  };*/
-
   class Uniform {
   public:
     const std::string name;
@@ -96,69 +53,6 @@ namespace gamo {
     FloatUniform(const std::string& name, const std::function<float()> valueBind) : Uniform(name), bindValue(valueBind) { };
 
     inline void update() override { glUniform1f(id, bindValue()); }
-  };
-
-  /*class ArrayBuffer {
-  private:
-    GLuint bufferId;
-    vector<float> data;
-
-  public:
-    inline void bind() { glBindBuffer(GL_ARRAY_BUFFER, bufferId); };
-    void draw(DrawMode mode) {
-      if (data.empty()) {
-        return;
-      }
-
-      switch (mode) {
-        case DrawMode::POINTS:
-          glDrawArrays(GL_POINTS, 0, data.size());
-          break;
-        case DrawMode::TRIANGLES:
-          glDrawArrays(GL_TRIANGLES, 0, data.size());
-          break;
-        case DrawMode::TRIANGLE_STRIP:
-          glDrawArrays(GL_TRIANGLE_STRIP, 0, data.size());
-          break;
-        default:
-          break;
-      }
-    }
-
-  public:
-    ArrayBuffer() { };
-
-    void setData(const vector<Vertex>& data) {
-      if (data.empty()) {
-        return;
-      }
-
-      bind();
-      //this->data = data.map((t) => t.storage()).reduce((l1, l2) => Float32List.fromList(l1 + l2));
-      glBufferData(GL_ARRAY_BUFFER, this->data, GL_STATIC_DRAW);
-    }
-  };*/
-
-  class Texture {
-  private:
-    GLuint textureId;
-
-    void bind() {
-      glBindTexture(GL_TEXTURE_2D, textureId);
-    }
-
-    void use(int index) {
-      switch (index) {
-        case 1:
-          glActiveTexture(GL_TEXTURE1);
-          break;
-        case 0:
-        default:
-          glActiveTexture(GL_TEXTURE0);
-          break;
-      }
-      bind();
-    }
   };
 
   class Shader {
