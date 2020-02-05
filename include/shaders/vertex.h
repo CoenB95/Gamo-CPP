@@ -7,7 +7,7 @@
 namespace gamo {
     class Vertex {
     public:
-        virtual void bindAttribArray(const std::vector<Vertex>& vertices) { };
+        
     };
     
     struct VertexP3C4 : public Vertex {
@@ -18,13 +18,6 @@ namespace gamo {
         VertexP3C4(const glm::vec3& position, const glm::vec4& color) :
             position(position),
             color(color) {
-        }
-        inline void bindAttribArray(const std::vector<Vertex>& vertices) override {
-            GLsizei stride = 3 * sizeof(float) + 4 * sizeof(float);
-            glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(&vertices + 0));
-            glEnableVertexAttribArray(1);
-			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, stride, (void*)(&vertices + 3 * sizeof(float)));
         }
     };
 
@@ -39,36 +32,30 @@ namespace gamo {
             normal(normal),
             texCoord(texCoord) {
         }
-        inline void bindAttribArray(const std::vector<Vertex>& vertices) override {
-            GLsizei stride = 3 * sizeof(float) + 3 * sizeof(float) + 2 * sizeof(float);
-            glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(&vertices + 0));
-            glEnableVertexAttribArray(1);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(&vertices + 3 * sizeof(float)));
-            glEnableVertexAttribArray(2);
-			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, (void*)(&vertices + 3 * sizeof(float) + 3 * sizeof(float)));
-        }
     };
 
     class Attribute {
+    private:
+        Attribute(std::string name, GLint size, GLenum type) : name(name), size(size), type(type), bytes(calcBytes(type)) { };
+
+        int calcBytes(GLenum type) {
+            switch (type) {
+            case GL_FLOAT: return sizeof(float); // 4 bytes
+            default: return 0;
+            }
+        }
+
     public:
         const std::string name;
+        const GLint bytes;
         const GLint size;
         const GLenum type;
-        int id;
+        int id = -1;
 
         void bind() {
             glEnableVertexAttribArray(id);
         }
 
-        int getByteCount() {
-            switch (type) {
-                case GL_FLOAT: return sizeof(float); // 4 bytes
-                default: return 0;
-            }
-        }
-
-        Attribute(std::string name, GLint size, GLenum type) : name(name), size(size), type(type) { };
         inline static Attribute vec2(const std::string& name) { return Attribute(name, 2, GL_FLOAT); };
         inline static Attribute vec3(const std::string& name) { return Attribute(name, 3, GL_FLOAT); };
         inline static Attribute vec4(const std::string& name) { return Attribute(name, 4, GL_FLOAT); };
@@ -76,25 +63,25 @@ namespace gamo {
 
     class AttribArray {
     private:
-        const std::vector<Attribute> attributes;
+        std::vector<Attribute> attributes;
 
     public:
         AttribArray() { };
         AttribArray(const std::vector<Attribute> attributes) : attributes(attributes) { };
-        void bind(const std::vector<Vertex>& vertices) {
+        void bind(void* vertices) {
             GLsizei stride = 0;
             int bytesOffset = 0;
             for (Attribute attrib : attributes) {
-                stride += attrib.getByteCount();
+                stride += attrib.size * attrib.bytes;
             }
             for (Attribute attrib : attributes) {
                 glEnableVertexAttribArray(attrib.id);
-			    glVertexAttribPointer(attrib.id, attrib.size, attrib.type, GL_FALSE, stride, (void*)(&vertices + bytesOffset));
-                bytesOffset += attrib.getByteCount();
+			    glVertexAttribPointer(attrib.id, attrib.size, attrib.type, false, stride, (float*)((int)vertices + bytesOffset));
+                bytesOffset += attrib.size;
             }
         };
         void link(GLuint programId) {
-            for (Attribute attrib : attributes) {
+            for (Attribute& attrib : attributes) {
                 GLint attributeLocation = glGetAttribLocation(programId, attrib.name.c_str());
                 if (attributeLocation < 0) {
                     throw std::invalid_argument("Could not find attribute '${attrib.name}'");

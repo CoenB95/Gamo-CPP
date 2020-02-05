@@ -13,7 +13,7 @@ namespace gamo {
 				return;
 			}
 			
-			shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
+			shader->draw(&parentObject->vertices, transform, DrawMode::TRIANGLES);
 		};
 	};
 
@@ -38,7 +38,7 @@ namespace gamo {
 			}
 
 			texture->use();
-			shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
+			shader->draw(&parentObject->vertices, transform, DrawMode::TRIANGLES);
 		};
 	};
 }

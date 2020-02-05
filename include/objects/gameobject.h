@@ -41,6 +41,7 @@ namespace gamo {
 
 		// Builds the object (called from worker thread)
 		void build() {
+			vertices.clear();
 			build(vertices);
 		}
 

@@ -22,7 +22,7 @@ namespace gamo {
   class Uniform {
   public:
     const std::string name;
-    GLint id;
+    GLint id = -1;
 
     Uniform(std::string name) : name(name) { };
 
@@ -31,10 +31,10 @@ namespace gamo {
 
   class Matrix4Uniform : public Uniform {
   private:
-    std::function<glm::mat4()> bindValue;
+    std::function<const glm::mat4&()> bindValue;
 
   public:
-    Matrix4Uniform(std::string name, const std::function<glm::mat4()>& valueBind) : Uniform(name), bindValue(valueBind) { };
+    Matrix4Uniform(std::string name, const std::function<const glm::mat4&()>& valueBind) : Uniform(name), bindValue(valueBind) { };
 
     inline void update() override { glUniformMatrix4fv(id, 1, false, glm::value_ptr(bindValue())); }
   };
@@ -79,14 +79,14 @@ namespace gamo {
 
   class Shader {
   private:
-    GLuint fragShaderId;
-    GLuint vertShaderId;
-    GLuint programId;
+    GLuint fragShaderId = 0;
+    GLuint vertShaderId = 0;
+    GLuint programId = 0;
 
   public:
-    glm::mat4 modelMatrix;
-    glm::mat4 viewMatrix;
-    glm::mat4 projectionMatrix;
+    glm::mat4 modelMatrix = glm::mat4();
+    glm::mat4 viewMatrix = glm::mat4();
+    glm::mat4 projectionMatrix = glm::mat4();
     AttribArray* attributeArray = nullptr;
     //vector<Attribute> attributes;
     std::vector<Uniform*> uniforms;
@@ -148,7 +148,7 @@ namespace gamo {
       }*/
       
       if (this->attributeArray != nullptr) {
-        attributeArray->link(programId);
+        this->attributeArray->link(programId);
       }
 
       for (Uniform* uniform : uniforms) {
@@ -167,26 +167,30 @@ namespace gamo {
       return data;
     }
 
-    void draw(const std::vector<Vertex>& vertices, const glm::mat4& transform, DrawMode mode) {
+    void draw(std::vector<Vertex>* vertices, const glm::mat4& transform, DrawMode mode) {
       modelMatrix = transform;
       for (Uniform* uniform : uniforms) {
         uniform->update();
       }
-      attributeArray->bind(vertices);
+      attributeArray->bind((void*)&vertices[0]);
 
       switch (mode) {
         case DrawMode::POINTS:
-          glDrawArrays(GL_POINTS, 0, vertices.size());
+          glDrawArrays(GL_POINTS, 0, vertices->size());
           break;
         case DrawMode::TRIANGLES:
-          glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+          glDrawArrays(GL_TRIANGLES, 0, vertices->size());
           break;
         case DrawMode::TRIANGLE_STRIP:
-          glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
+          glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices->size());
           break;
         default:
           break;
       }
+    }
+
+    void use() {
+        glUseProgram(programId);
     }
   };
 }
