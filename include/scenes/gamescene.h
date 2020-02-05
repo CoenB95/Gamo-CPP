@@ -8,7 +8,9 @@ namespace gamo {
 		std::vector<GameObject*> objects;
 
 	public:
-		GameScene();
-		void addObject(GameObject* object);
+		GameScene() { };
+		void addObject(GameObject* object) {
+			objects.push_back(object);
+		};
 	};
 }

@@ -16,8 +16,29 @@ namespace gamo {
 	    float snappyness;
 
     public:
-        SmoothComponent(float snappyness, bool rotate = false, bool scale = false, bool translate = false);
+        SmoothComponent(float snappyness, bool rotate = false, bool scale = false, bool translate = false) :
+                GameObjectComponent(),
+                snappyness(snappyness) {
+            this->translate = translate;
+            this->rotate = rotate;
+        };
 
-	    void onUpdate(float elapsedSeconds) override;
+	    void onUpdate(float elapsedSeconds) override {
+            previousOrientation = parentObject->orientation;
+            previousPosition = parentObject->position;
+            previousScale = parentObject->scale;
+
+            if (rotate) {
+                parentObject->orientation = glm::slerp(previousOrientation, parentObject->orientation, snappyness);
+            }
+
+            if (scale) {
+                parentObject->scale = glm::mix(previousScale, parentObject->scale, snappyness);
+            }
+
+            if (translate) {
+                parentObject->position = glm::mix(previousPosition, parentObject->position, snappyness);
+            }
+        };
     };
 }

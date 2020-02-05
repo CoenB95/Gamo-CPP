@@ -10,8 +10,16 @@ namespace gamo {
 		float secondsLeft;
 
 	public:
-		DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, std::string tag = "");
+		DespawnComponent(GameObjectGroup* parentGroup, float timeInSeconds, std::string tag = "") : GameObjectComponent(tag) {
+			this->parentGroup = parentGroup;
+			this->secondsLeft = timeInSeconds;
+		};
 
-		void onUpdate(float elapsedSeconds);
+		void onUpdate(float elapsedSeconds) {
+			secondsLeft -= elapsedSeconds;
+			if (secondsLeft <= 0 && parentGroup != nullptr) {
+				parentGroup->deleteChild(parentObject);
+			}
+		};
 	};
 }
