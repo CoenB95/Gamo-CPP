@@ -3,13 +3,14 @@
 #include "components/gameobjectcomponent.h"
 
 namespace gamo {
-	class SpinComponent : public GameObjectComponent {
+	template<class T>
+	class SpinComponent : public GameObjectComponent<T> {
 	private:
 		float degreesPerSec;
 		float value;
 
 	public:
-		SpinComponent(float degreesPerSec, std::string tag = "") : GameObjectComponent(tag),
+		SpinComponent(float degreesPerSec, std::string tag = "") : GameObjectComponent<T>(tag),
 				degreesPerSec(degreesPerSec) {
 
 		};

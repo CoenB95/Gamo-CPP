@@ -4,11 +4,13 @@
 #include "shaders/shader.h"
 
 namespace gamo {
+	template<class T>
 	class GameObject;
 
+	template<class T>
 	class GameObjectComponent {
 	protected:
-		GameObject* parentObject;
+		GameObject<T>* parentObject;
 
 	public:
 		const std::string tag;
@@ -18,11 +20,11 @@ namespace gamo {
 		};
 		virtual ~GameObjectComponent() {};
 
-		inline virtual void onAttach(GameObject* newParent) {};
-		inline virtual void onBuild(std::vector<Vertex>& vertices) {};
-		inline virtual void onDraw(Shader* shader, const glm::mat4& transform) {};
+		inline virtual void onAttach(GameObject<T>* newParent) {};
+		inline virtual void onBuild(std::vector<T>& vertices) {};
+		inline virtual void onDraw(Shader<T>* shader, const glm::mat4& transform) {};
 		inline virtual void onUpdate(float elapsedSeconds) {};
-		void setParent(GameObject* newParent) {
+		void setParent(GameObject<T>* newParent) {
 			parentObject = newParent;
 			onAttach(parentObject);
 		};
