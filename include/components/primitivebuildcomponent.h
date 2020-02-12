@@ -22,14 +22,15 @@ namespace gamo {
             double hw = width / 2;
             double hh = height / 2;
             double hd = depth / 2;
+            double ts = 1.0 / 16.0;
             if (front) {
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3(hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(1, 1)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(0, 1)),
+                  VertexP3N3T2(glm::vec3(hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(ts, ts)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(0, ts)),
                   VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(1, 1)),
+                  VertexP3N3T2(glm::vec3(hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec2(ts, ts)),
                   VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec2(1, 0))
+                  VertexP3N3T2(glm::vec3(hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec2(ts, 0))
                     });
             }
         }

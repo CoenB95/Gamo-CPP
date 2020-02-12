@@ -29,6 +29,16 @@ namespace gamo {
         virtual void update() = 0;
     };
 
+    class Matrix3Uniform : public Uniform {
+    private:
+        std::function<const glm::mat3 & ()> bindValue;
+
+    public:
+        Matrix3Uniform(std::string name, const std::function<const glm::mat3 & ()>& valueBind) : Uniform(name), bindValue(valueBind) { };
+
+        inline void update() override { glUniformMatrix3fv(id, 1, false, glm::value_ptr(bindValue())); }
+    };
+
     class Matrix4Uniform : public Uniform {
     private:
         std::function<const glm::mat4 & ()> bindValue;

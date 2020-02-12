@@ -36,7 +36,6 @@
   <ItemGroup>
     <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
     <ClCompile Include="include\objects\cube.cpp" />
-    <ClCompile Include="include\objects\gameobject.cpp" />
     <ClCompile Include="include\shaders\texture.cpp" />
     <ClCompile Include="include\shaders\vertex.cpp" />
   </ItemGroup>
