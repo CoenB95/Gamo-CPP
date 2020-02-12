@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glm.hpp>
-#include <gtc/quaternion.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <mutex>
 #include <vector>
 
@@ -158,7 +158,7 @@ namespace gamo {
 			}
 
 			std::lock_guard<std::mutex> lock(childrenMutex);
-			std::vector<GameObject<T>*>::iterator it = find(children.begin(), children.end(), object);
+			typename std::vector<GameObject<T>*>::iterator it = std::find(children.begin(), children.end(), object);
 			if (it != children.end()) {
 				children.erase(it);
 				delete object;
@@ -171,7 +171,7 @@ namespace gamo {
 			}
 
 			std::lock_guard<std::mutex> lock(componentsMutex);
-			std::vector<GameObjectComponent<T>*>::iterator it = find(components.begin(), components.end(), component);
+			typename std::vector<GameObjectComponent<T>*>::iterator it = std::find(components.begin(), components.end(), component);
 			if (it != components.end()) {
 				components.erase(it);
 				delete component;
@@ -215,7 +215,7 @@ namespace gamo {
 			}
 
 			std::lock_guard<std::mutex> lock(childrenMutex);
-			std::vector<GameObject<T>*>::iterator it = find(children.begin(), children.end(), object);
+			typename std::vector<GameObject<T>*>::iterator it = std::find(children.begin(), children.end(), object);
 			if (it != children.end()) {
 				children.erase(it);
 			}
@@ -227,7 +227,7 @@ namespace gamo {
 			}
 
 			std::lock_guard<std::mutex> lock(componentsMutex);
-			std::vector<GameObjectComponent<T>*>::iterator it = find(components.begin(), components.end(), component);
+			typename std::vector<GameObjectComponent<T>*>::iterator it = std::find(components.begin(), components.end(), component);
 			if (it != components.end()) {
 				components.erase(it);
 				component->setParent(nullptr);

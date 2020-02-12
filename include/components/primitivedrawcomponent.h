@@ -6,15 +6,7 @@
 namespace gamo {
 	class ColorDrawComponent : public GameObjectComponent<VertexP3C4> {
 	public:
-		void onDraw(Shader<VertexP3C4>* shader, const glm::mat4& transform) override {
-			std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
-
-			if (parentObject->vertices.size() <= 0) {
-				return;
-			}
-			
-			shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
-		};
+		void onDraw(Shader<VertexP3C4>* shader, const glm::mat4& transform) override;
 	};
 
 	class TextureDrawComponent : public GameObjectComponent<VertexP3N3T2> {
@@ -22,23 +14,8 @@ namespace gamo {
 		Texture* texture;
 
 	public:
-		TextureDrawComponent(const std::string& fileName) : GameObjectComponent() {
-			texture = Texture::loadCached(fileName, true);
-		};
+		TextureDrawComponent(const std::string& fileName);
 
-		void onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) override {
-			std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
-
-			if (parentObject->vertices.size() <= 0) {
-				return;
-			}
-
-			if (texture == nullptr) {
-				return;
-			}
-
-			texture->use();
-			shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
-		};
+		void onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) override;
 	};
 }

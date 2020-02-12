@@ -3,9 +3,9 @@
 #include <functional>
 #include <fstream>
 #include <GL/glew.h>
-#include <glm.hpp>
-#include <gtx/quaternion.hpp>
-#include <gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <string>
 
 #include <iostream>
@@ -59,30 +59,29 @@ namespace gamo {
         inline void update() override { glUniform1f(id, bindValue()); }
     };
 
-    bool checkShaderErrors(GLuint shaderId)
-    {
-        GLint status;
-        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);					//kijk of het compileren is gelukt
-        if (status == GL_FALSE)
-        {
-            int length, charsWritten;
-            glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);				//haal de lengte van de foutmelding op
-            char* infolog = new char[length + 1];
-            memset(infolog, 0, length + 1);
-            glGetShaderInfoLog(shaderId, length, &charsWritten, infolog);		//en haal de foutmelding zelf op
-            std::cout << "Error compiling shader:\n" << infolog << std::endl;
-            delete[] infolog;
-            return true;
-        }
-        return false;
-    }
-
     template<class T>
     class Shader {
     private:
         GLuint fragShaderId = 0;
         GLuint vertShaderId = 0;
         GLuint programId = 0;
+
+        bool checkShaderErrors(GLuint shaderId) {
+            GLint status;
+            glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);					//kijk of het compileren is gelukt
+            if (status == GL_FALSE)
+            {
+                int length, charsWritten;
+                glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);				//haal de lengte van de foutmelding op
+                char* infolog = new char[length + 1];
+                memset(infolog, 0, length + 1);
+                glGetShaderInfoLog(shaderId, length, &charsWritten, infolog);		//en haal de foutmelding zelf op
+                std::cout << "Error compiling shader:\n" << infolog << std::endl;
+                delete[] infolog;
+                return true;
+            }
+            return false;
+        }
 
     public:
         glm::mat4 modelMatrix = glm::mat4();
@@ -172,14 +171,14 @@ namespace gamo {
             }
         }
 
-        void use() {
+        inline void use() {
             glUseProgram(programId);
         }
     };
 
     class Shaders {
     public:
-        inline static glm::mat4& Shaders::compose(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale) {
+        inline static glm::mat4 compose(const glm::vec3& position, const glm::quat& orientation, const glm::vec3& scale) {
             glm::mat4 modelMatrix = glm::identity<glm::mat4>();
             modelMatrix = glm::translate(modelMatrix, position);
             modelMatrix = glm::scale(modelMatrix, scale);

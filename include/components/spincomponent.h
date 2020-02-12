@@ -17,7 +17,7 @@ namespace gamo {
 
 		void onUpdate(float elapsedSeconds) {
 			glm::quat rotationalDelta = glm::quat(glm::vec3(0.0f, glm::radians(degreesPerSec * elapsedSeconds), 0.0f));
-			parentObject->orientation *= rotationalDelta;
+			this->parentObject->orientation *= rotationalDelta;
 		};
 	};
 }
