@@ -3,20 +3,21 @@
 #include "components/gameobjectcomponent.h"
 
 namespace gamo {
-	class SpinComponent : public GameObjectComponent {
+	template<class T>
+	class SpinComponent : public GameObjectComponent<T> {
 	private:
 		float degreesPerSec;
 		float value;
 
 	public:
-		SpinComponent(float degreesPerSec, std::string tag = "") : GameObjectComponent(tag),
+		SpinComponent(float degreesPerSec, std::string tag = "") : GameObjectComponent<T>(tag),
 				degreesPerSec(degreesPerSec) {
 
 		};
 
 		void onUpdate(float elapsedSeconds) {
 			glm::quat rotationalDelta = glm::quat(glm::vec3(0.0f, glm::radians(degreesPerSec * elapsedSeconds), 0.0f));
-			parentObject->orientation *= rotationalDelta;
+			this->parentObject->orientation *= rotationalDelta;
 		};
 	};
 }

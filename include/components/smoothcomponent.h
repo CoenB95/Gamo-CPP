@@ -3,7 +3,8 @@
 #include "components/gameobjectcomponent.h"
 
 namespace gamo {
-    class SmoothComponent : public GameObjectComponent {
+    template<class T>
+    class SmoothComponent : public GameObjectComponent<T> {
     private:
         glm::quat previousOrientation;
 	    glm::vec3 previousPosition;

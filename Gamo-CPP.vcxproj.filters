@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="components">
+      <UniqueIdentifier>{133f925a-d725-49bb-ae89-8996207b3090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="objects">
+      <UniqueIdentifier>{ae42f08d-65b3-41f8-b055-95b6db58958d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes">
+      <UniqueIdentifier>{ffa98ff2-7383-40da-ad0b-922aba13a5fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{cbd78c39-60df-49c8-872d-f6be861b7d87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\components\despawncomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\followcomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\gameobjectcomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\primitivebuildcomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\primitivedrawcomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\smoothcomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\components\spincomponent.h">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="include\objects\cube.h">
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\objects\gameobject.h">
+      <Filter>objects</Filter>
+    </ClInclude>
+    <ClInclude Include="include\scenes\gamescene.h">
+      <Filter>scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaders\vertex.h">
+      <Filter>shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaders\shader.h">
+      <Filter>shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaders\texture.h">
+      <Filter>shaders</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="include\shaders\texture.cpp">
+      <Filter>shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="include\shaders\vertex.cpp">
+      <Filter>shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="include\objects\cube.cpp" />
+    <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\terrain.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
