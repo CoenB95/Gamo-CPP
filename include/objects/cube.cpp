@@ -18,7 +18,6 @@ namespace gamo {
         return textured("libs/gamo/res/terrain.png", glm::ivec2(16, 16), glm::vec3(size), indices);
     }
 
-    //{ 0, 3, 3, 3, 3, 2 }
     GameObject<VertexP3N3T2>* Cubes::textured(std::string filename, glm::ivec2 tileCount, glm::vec3 size, std::vector<int> indices) {
         GameObject<VertexP3N3T2>* cube = new GameObject<VertexP3N3T2>();
         cube->addComponent(new SpinComponent<VertexP3N3T2>(glm::vec3(40.0, 0.0, 0.0)));
