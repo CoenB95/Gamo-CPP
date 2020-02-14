@@ -62,6 +62,7 @@ namespace gamo {
         int width = -1;
         int height = -1;
         int depth = -1;
+
         stbi_uc* data = stbi_load(filename.c_str(), &width, &height, &depth, 4);
 
         if (data == nullptr) {

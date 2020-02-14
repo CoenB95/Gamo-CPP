@@ -97,6 +97,9 @@ namespace gamo {
         glm::mat4 modelMatrix = glm::mat4();
         glm::mat4 viewMatrix = glm::mat4();
         glm::mat4 projectionMatrix = glm::mat4();
+
+        bool wireframe = false;
+
         AttribArray<T>* attributeArray = nullptr;
         std::vector<Uniform*> uniforms;
 
@@ -168,13 +171,13 @@ namespace gamo {
 
             switch (mode) {
             case DrawMode::POINTS:
-                glDrawArrays(GL_POINTS, 0, vertices.size());
+                glDrawArrays(wireframe ? GL_LINE_STRIP : GL_POINTS, 0, vertices.size());
                 break;
             case DrawMode::TRIANGLES:
-                glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+                glDrawArrays(wireframe ? GL_LINE_STRIP : GL_TRIANGLES, 0, vertices.size());
                 break;
             case DrawMode::TRIANGLE_STRIP:
-                glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size());
+                glDrawArrays(wireframe ? GL_LINE_STRIP : GL_TRIANGLE_STRIP, 0, vertices.size());
                 break;
             default:
                 break;

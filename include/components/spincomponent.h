@@ -6,17 +6,15 @@ namespace gamo {
 	template<class T>
 	class SpinComponent : public GameObjectComponent<T> {
 	private:
-		float degreesPerSec;
-		float value;
+		glm::vec3 radiansPerSec;
 
 	public:
-		SpinComponent(float degreesPerSec, std::string tag = "") : GameObjectComponent<T>(tag),
-				degreesPerSec(degreesPerSec) {
-
+		SpinComponent(glm::vec3 degreesPerSec, std::string tag = "") : GameObjectComponent<T>(tag) {
+			radiansPerSec = glm::radians(degreesPerSec);
 		};
 
 		void onUpdate(float elapsedSeconds) {
-			glm::quat rotationalDelta = glm::quat(glm::vec3(0.0f, glm::radians(degreesPerSec * elapsedSeconds), 0.0f));
+			glm::quat rotationalDelta = glm::quat(radiansPerSec * elapsedSeconds);
 			this->parentObject->orientation *= rotationalDelta;
 		};
 	};
