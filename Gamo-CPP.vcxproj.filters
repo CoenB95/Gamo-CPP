@@ -58,6 +58,7 @@
     <ClInclude Include="include\shaders\texture.h">
       <Filter>shaders</Filter>
     </ClInclude>
+    <ClInclude Include="include\objects\pane.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\shaders\texture.cpp">
@@ -68,6 +69,7 @@
     </ClCompile>
     <ClCompile Include="include\objects\cube.cpp" />
     <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
+    <ClCompile Include="include\objects\pane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\terrain.png">

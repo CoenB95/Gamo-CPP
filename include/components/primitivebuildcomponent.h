@@ -104,33 +104,32 @@ namespace gamo {
 
     class TexturedPaneBuildComponent : public GameObjectComponent<VertexP3N3T2> {
     private:
-        glm::vec3 cubeSize;
+        glm::vec2 paneSize;
         glm::ivec2 tileCount;
 
     public:
         int tileIndex = -1;
 
-        TexturedPaneBuildComponent(glm::ivec2 textureTileCount, glm::vec3 size, int index = -1) {
-            cubeSize = size;
+        TexturedPaneBuildComponent(glm::ivec2 textureTileCount, glm::vec2 size, int index = -1) {
+            paneSize = size;
             tileCount = textureTileCount;
             tileIndex = index;
         };
 
         void onBuild(std::vector<VertexP3N3T2>& vertices) override {
-            double hw = cubeSize.x / 2;
-            double hh = cubeSize.y / 2;
-            double hd = cubeSize.z / 2;
+            double hw = paneSize.x / 2;
+            double hh = paneSize.y / 2;
             glm::vec2 ts = glm::vec2(1.0 / tileCount.x, 1.0 / tileCount.y);
 
             if (tileIndex >= 0) {
                 glm::vec2 tileCoord = glm::vec2(tileIndex % tileCount.x, tileIndex / tileCount.x) * ts;
                 vertices.insert(vertices.end(), {
-                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                    VertexP3N3T2(glm::vec3(-hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, 0)),
-                    VertexP3N3T2(glm::vec3(-hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, ts.y)),
-                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                    VertexP3N3T2(glm::vec3(-hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, ts.y)),
-                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, ts.y))
+                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
+                    VertexP3N3T2(glm::vec3(-hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
+                    VertexP3N3T2(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
+                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
+                    VertexP3N3T2(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
+                    VertexP3N3T2(glm::vec3( hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y))
                 });
             }
         }

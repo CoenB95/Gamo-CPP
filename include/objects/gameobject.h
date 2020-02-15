@@ -41,12 +41,12 @@ namespace gamo {
 		};
 
 		// Builds the object (called from worker thread)
-		void build() {
+		void build(bool standaloneChildren = false) {
 			vertices.clear();
-			build(vertices);
+			build(vertices, standaloneChildren);
 		}
 
-		void build(std::vector<T>& vertices) {
+		void build(std::vector<T>& vertices, bool standaloneChildren = false) {
 			dirty = false;
 
 			// Build self.
@@ -67,7 +67,11 @@ namespace gamo {
 			}
 			for (GameObject<T>* child : childrenCopy) {
 				if (child->shouldRebuild()) {
-					child->build(vertices);
+					if (standaloneChildren) {
+						child->build();
+					} else {
+						child->build(vertices);
+					}
 				}
 			}
 		};
@@ -130,10 +134,38 @@ namespace gamo {
 			children.push_back(object);
 		};
 
+		void addChildren(std::vector<GameObject*> objects) {
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			for (GameObject* object : objects) {
+				if (object == nullptr) {
+					continue;
+				}
+
+				object->parent = this;
+				children.push_back(object);
+			}
+		};
+
 		void addComponent(GameObjectComponent<T>* component) {
+			if (component == nullptr) {
+				return;
+			}
+
 			component->setParent(this);
 			std::lock_guard<std::mutex> lock(componentsMutex);
 			components.push_back(component);
+		};
+
+		void addComponents(std::vector<GameObjectComponent<T>*> comps) {
+			std::lock_guard<std::mutex> lock(componentsMutex);
+			for (GameObjectComponent<T>* component : comps) {
+				if (component == nullptr) {
+					continue;
+				}
+
+				component->parent = this;
+				children.push_back(component);
+			}
 		};
 
 		void deleteAllChildren() {
