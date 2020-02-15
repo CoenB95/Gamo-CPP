@@ -33,4 +33,8 @@ namespace gamo {
     GameObject<VertexP3N3T2>* Cubes::mcPumpkin(double size) {
         return mc(size, { 102, 118, 119, 118, 118, 118 });
     }
+
+    GameObject<VertexP3N3T2>* Cubes::mcTotal(double size) {
+        return textured("libs/gamo/res/terrain.png", glm::ivec2(1, 1), glm::vec3(size), { 0, 0, 0, 0, 0, 0 });
+    }
 }

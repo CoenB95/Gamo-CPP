@@ -3,33 +3,53 @@
 #include "objects/gameobject.h"
 
 namespace gamo {
+	class ShaderObjectPairBase {
+	public:
+		virtual void draw() = 0;
+		virtual void update(double elapsedSeconds) = 0;
+	};
+
+	template<class T>
+	class ShaderObjectPair : public ShaderObjectPairBase {
+	public:
+		GameObject<T>* group;
+		Shader<T>* shader;
+
+		ShaderObjectPair(GameObject<T>* group, Shader<T>* shader) : group(group), shader(shader) { };
+		void draw() override {
+			if (shader == nullptr) {
+				std::cout << "Warning: GameObjectGroup '" << group->tag << "' has no shader to draw with." << std::endl;
+				return;
+			}
+
+			shader->use();
+			group->draw(shader);
+		};
+
+		void update(double elapsedSeconds) override {
+			// Todo: move building to a thread.
+			if (group->shouldRebuild()) {
+				group->build(true);
+			}
+
+			group->update(elapsedSeconds);
+		};
+	};
+
 	class GameScene {
 	public:
-		GameObject<VertexP3C4>* colored = new GameObject<VertexP3C4>();
-		GameObject<VertexP3N3T2>* textured = new GameObject<VertexP3N3T2>();
-
-		Shader<VertexP3C4>* coloredShader;
-		Shader<VertexP3N3T2>* texturedShader;
+		std::vector<ShaderObjectPairBase*> pairs;
 
 		void draw() {
-			coloredShader->use();
-			colored->draw(coloredShader);
-
-			texturedShader->use();
-			textured->draw(texturedShader);
+			for (ShaderObjectPairBase* pair : pairs) {
+				pair->draw();
+			}
 		};
 
 		void update(double elapsedSeconds) {
-			// Todo: move building to a thread.
-			if (colored->shouldRebuild()) {
-				colored->build(true);
+			for (ShaderObjectPairBase* pair : pairs) {
+				pair->update(elapsedSeconds);
 			}
-			if (textured->shouldRebuild()) {
-				textured->build(true);
-			}
-
-			colored->update(elapsedSeconds);
-			textured->update(elapsedSeconds);
-		}
+		};
 	};
 }

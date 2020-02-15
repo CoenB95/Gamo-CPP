@@ -20,6 +20,7 @@ namespace gamo {
 		bool dirty = true;
 
 	public:
+		const std::string tag;
 		GameObject<T>* parent = nullptr;
 
 		glm::vec3 position = glm::vec3();
@@ -29,7 +30,8 @@ namespace gamo {
 		std::vector<T> vertices;
 		std::mutex verticesMutex;
 
-		GameObject() { };
+		GameObject(const std::string tag = "") : tag(tag) { };
+
 		virtual ~GameObject() {
 			deleteAllChildren();
 			deleteAllComponents();
