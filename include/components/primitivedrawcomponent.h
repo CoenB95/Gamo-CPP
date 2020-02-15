@@ -4,9 +4,9 @@
 #include "shaders/texture.h"
 
 namespace gamo {
-	class ColorDrawComponent : public GameObjectComponent<VertexP3C4> {
+	class ColorDrawComponent : public GameObjectComponent<VertexP3N3C4> {
 	public:
-		void onDraw(Shader<VertexP3C4>* shader, const glm::mat4& transform) override;
+		void onDraw(Shader<VertexP3N3C4>* shader, const glm::mat4& transform) override;
 	};
 
 	class TextureDrawComponent : public GameObjectComponent<VertexP3N3T2> {

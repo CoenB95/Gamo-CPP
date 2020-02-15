@@ -20,6 +20,15 @@ namespace gamo {
         VertexP3C4(const glm::vec3& position, const glm::vec4& color);
     };
 
+    struct VertexP3N3C4 : public Vertex {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec4 color;
+
+        VertexP3N3C4();
+        VertexP3N3C4(const glm::vec3& position, const glm::vec3& normal, const glm::vec4& color);
+    };
+
     struct VertexP3N3T2 : public Vertex {
         glm::vec3 position;
         glm::vec3 normal;
@@ -88,6 +97,10 @@ namespace gamo {
     public:
         inline static AttribArray<VertexP3C4>* p3c4(const std::string& p3, const std::string& c4) {
             return new AttribArray<VertexP3C4>({ Attribute::vec3(p3), Attribute::vec4(c4) });
+        };
+
+        inline static AttribArray<VertexP3N3C4>* p3n3c4(const std::string& p3, const std::string& n3, const std::string& c4) {
+            return new AttribArray<VertexP3N3C4>({ Attribute::vec3(p3), Attribute::vec3(n3), Attribute::vec4(c4) });
         };
 
         inline static AttribArray<VertexP3N3T2>* p3n3t2(const std::string& p3, const std::string& n3, const std::string& t2) {

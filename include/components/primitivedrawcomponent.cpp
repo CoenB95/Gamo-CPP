@@ -5,7 +5,7 @@
 
 namespace gamo {
 	
-	void ColorDrawComponent::onDraw(Shader<VertexP3C4>* shader, const glm::mat4& transform) {
+	void ColorDrawComponent::onDraw(Shader<VertexP3N3C4>* shader, const glm::mat4& transform) {
 		std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 
 		if (parentObject->vertices.size() <= 0) {

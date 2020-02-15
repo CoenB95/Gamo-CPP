@@ -5,10 +5,10 @@
 #include "objects/pane.h"
 
 namespace gamo {
-    GameObject<VertexP3C4>* Panes::colored(double size) {
-        GameObject<VertexP3C4>* cube = new GameObject<VertexP3C4>();
-        cube->addComponent(new SpinComponent<VertexP3C4>(glm::vec3(0.0, 40.0, 0.0)));
-        cube->addComponent(new ColoredCubeBuildComponent(size));
+    GameObject<VertexP3N3C4>* Panes::colored(double size) {
+        GameObject<VertexP3N3C4>* cube = new GameObject<VertexP3N3C4>();
+        cube->addComponent(new SpinComponent<VertexP3N3C4>(glm::vec3(0.0, 40.0, 0.0)));
+        cube->addComponent(new ColoredPaneBuildComponent(glm::vec3(size)));
         cube->addComponent(new ColorDrawComponent());
         return cube;
     }

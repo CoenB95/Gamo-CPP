@@ -135,11 +135,9 @@ namespace gamo {
         }
     };
 
-    class ColoredCubeBuildComponent : public GameObjectComponent<VertexP3C4> {
+    class ColoredCubeBuildComponent : public GameObjectComponent<VertexP3N3C4> {
     private:
-        double width;
-        double height;
-        double depth;
+        glm::vec3 size;
 
         bool top = true;
         bool left = true;
@@ -149,75 +147,99 @@ namespace gamo {
         bool bottom = true;
 
     public:
-        ColoredCubeBuildComponent(double width = 1, double height = 1, double depth = 1) :
-            width(width), height(height), depth(depth) {
+        ColoredCubeBuildComponent(glm::vec3 size) :
+            size(size) {
         };
 
-        void onBuild(std::vector<VertexP3C4>& vertices) override {
-            double hw = width / 2;
-            double hh = height / 2;
-            double hd = depth / 2;
+        void onBuild(std::vector<VertexP3N3C4>& vertices) override {
+            double hw = size.x / 2;
+            double hh = size.y / 2;
+            double hd = size.z / 2;
             
             if (top) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3( hw,  hh, -hd), glm::vec4(1, 0, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh, -hd), glm::vec4(1, 0, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh,  hd), glm::vec4(1, 0, 0, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh, -hd), glm::vec4(1, 0, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh,  hd), glm::vec4(1, 0, 0, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh,  hd), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh,  hd), glm::vec3(0, 1, 0), glm::vec4(1, 0, 0, 1)),
                     });
             }
             if (front) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3( hw,  hh,  hd), glm::vec4(1, 1, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh,  hd), glm::vec4(1, 1, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh,  hd), glm::vec4(1, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh,  hd), glm::vec4(1, 1, 0, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh,  hd), glm::vec4(1, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh,  hd), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh,  hd), glm::vec3(0, 0, 1), glm::vec4(1, 1, 0, 1)),
                     });
             }
             if (right) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3( hw,  hh, -hd), glm::vec4(0, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh,  hd), glm::vec4(0, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh,  hd), glm::vec4(0, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh, -hd), glm::vec4(0, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh,  hd), glm::vec4(0, 1, 0, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh, -hd), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh,  hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh, -hd), glm::vec3(1, 0, 0), glm::vec4(0, 1, 0, 1)),
                     });
             }
             if (bottom) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3( hw, -hh,  hd), glm::vec4(0, 1, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh,  hd), glm::vec4(0, 1, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh, -hd), glm::vec4(0, 1, 1, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh,  hd), glm::vec4(0, 1, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh, -hd), glm::vec4(0, 1, 1, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh, -hd), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh,  hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh, -hd), glm::vec3(0, -1, 0), glm::vec4(0, 1, 1, 1)),
                     });
             }
             if (back) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3(-hw,  hh, -hd), glm::vec4(0, 0, 1, 1)),
-                  VertexP3C4(glm::vec3( hw,  hh, -hd), glm::vec4(0, 0, 1, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh, -hd), glm::vec4(0, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh, -hd), glm::vec4(0, 0, 1, 1)),
-                  VertexP3C4(glm::vec3( hw, -hh, -hd), glm::vec4(0, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh, -hd), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw,  hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh, -hd), glm::vec3(0, 0, -1), glm::vec4(0, 0, 1, 1)),
                     });
             }
             if (left) {
                 vertices.insert(vertices.end(), {
-                  VertexP3C4(glm::vec3(-hw,  hh,  hd), glm::vec4(1, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh, -hd), glm::vec4(1, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh, -hd), glm::vec4(1, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw,  hh,  hd), glm::vec4(1, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh, -hd), glm::vec4(1, 0, 1, 1)),
-                  VertexP3C4(glm::vec3(-hw, -hh,  hd), glm::vec4(1, 0, 1, 1))
+                  VertexP3N3C4(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh, -hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1)),
+                  VertexP3N3C4(glm::vec3(-hw, -hh,  hd), glm::vec3(-1, 0, 0), glm::vec4(1, 0, 1, 1))
                     });
             }
+        }
+    };
+
+    class ColoredPaneBuildComponent : public GameObjectComponent<VertexP3N3C4> {
+    private:
+        glm::vec2 paneSize;
+
+    public:
+        ColoredPaneBuildComponent(glm::vec2 size) {
+            paneSize = size;
+        };
+
+        void onBuild(std::vector<VertexP3N3C4>& vertices) override {
+            double hw = paneSize.x / 2;
+            double hh = paneSize.y / 2;
+
+            vertices.insert(vertices.end(), {
+                VertexP3N3C4(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1)),
+                VertexP3N3C4(glm::vec3(-hw,  hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1)),
+                VertexP3N3C4(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1)),
+                VertexP3N3C4(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1)),
+                VertexP3N3C4(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1)),
+                VertexP3N3C4(glm::vec3( hw, -hh, 0), glm::vec3(0, 0, 1), glm::vec4(1, 0, 1, 1))
+                });
         }
     };
 }
