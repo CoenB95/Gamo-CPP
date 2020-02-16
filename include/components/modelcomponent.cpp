@@ -1,7 +1,8 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 #include <vector>
-#include <algorithm>
 
 #include "shaders/texture.h"
 
@@ -246,7 +247,11 @@ namespace gamo {
 							n[1] = normals[(atoi(indices[2].c_str()) - 1) * 3 + 1];
 							n[2] = normals[(atoi(indices[2].c_str()) - 1) * 3 + 2];
 						}
-						vertices.push_back(VertexP3N3T2(glm::vec3(p[0], p[1], p[2]) * scale, glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1])));
+
+						{
+							std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
+							vertices.push_back(VertexP3N3T2(glm::vec3(p[0], p[1], p[2]) * scale, glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1])));
+						}
 						//vertices.push_back(VertexP3N3T2A4(glm::vec3(p[0], p[1], p[2]), glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1]),
 						//	glm::vec4(tangent[0], tangent[1], tangent[2], tangent[3]));
 
@@ -274,8 +279,10 @@ namespace gamo {
 				loadMaterialFile(dirName + "/" + params[1], dirName);
 			}
 			else if (params[0] == "usemtl") {
-				if (currentGroup->end != -1)
+				if (currentGroup->end != -1) {
+					std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 					groups.push_back(currentGroup);
+				}
 				currentGroup = new GroupInfo();
 				currentGroup->start = vertices.size();// / 12;
 
@@ -295,7 +302,10 @@ namespace gamo {
 
 		}
 
-		groups.push_back(currentGroup);
+		{
+			std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
+			groups.push_back(currentGroup);
+		}
 
 		/*glGenVertexArrays(1, &_vertexArray);
 		glBindVertexArray(_vertexArray);
@@ -323,6 +333,7 @@ namespace gamo {
 
 	void ModelComponent::onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) {
 		//glBindVertexArray(_vertexArray);
+		std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 		for (size_t i = 0; i < groups.size(); i++)
 		{
 			GroupInfo* group = groups[i];
@@ -389,11 +400,11 @@ namespace gamo {
 			}
 			else if (params[0] == "map_kd")
 			{
-				currentMaterial->texture = gamo::Texture::loadCached(dirName + "/" + params[1]);
+				currentMaterial->texture = gamo::Texture::ofCachedImage(dirName + "/" + params[1]);
 			}
 			else if (params[0] == "map_bump")
 			{
-				currentMaterial->bumpMap = gamo::Texture::loadCached(dirName + "/" + params[1]);
+				currentMaterial->bumpMap = gamo::Texture::ofCachedImage(dirName + "/" + params[1]);
 			}
 			//		else
 			//			std::cout<<"Didn't parse "<<params[0]<<" in material file"<<std::endl;

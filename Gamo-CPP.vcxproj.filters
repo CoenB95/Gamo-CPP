@@ -72,6 +72,7 @@
     <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
     <ClCompile Include="include\objects\pane.cpp" />
     <ClCompile Include="include\components\modelcomponent.cpp" />
+    <ClCompile Include="include\components\primitivebuildcomponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\terrain.png">

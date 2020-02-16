@@ -5,6 +5,7 @@
 namespace gamo {
 	class ShaderObjectPairBase {
 	public:
+		virtual void build() = 0;
 		virtual void draw() = 0;
 		virtual void update(double elapsedSeconds) = 0;
 	};
@@ -16,6 +17,13 @@ namespace gamo {
 		Shader<T>* shader;
 
 		ShaderObjectPair(GameObject<T>* group, Shader<T>* shader) : group(group), shader(shader) { };
+
+		void build() override {
+			if (group->shouldRebuild()) {
+				group->build(true);
+			}
+		};
+
 		void draw() override {
 			if (shader == nullptr) {
 				std::cout << "Warning: GameObjectGroup '" << group->tag << "' has no shader to draw with." << std::endl;
@@ -27,11 +35,6 @@ namespace gamo {
 		};
 
 		void update(double elapsedSeconds) override {
-			// Todo: move building to a thread.
-			if (group->shouldRebuild()) {
-				group->build(true);
-			}
-
 			group->update(elapsedSeconds);
 		};
 	};
@@ -39,6 +42,12 @@ namespace gamo {
 	class GameScene {
 	public:
 		std::vector<ShaderObjectPairBase*> pairs;
+
+		void build() {
+			for (ShaderObjectPairBase* pair : pairs) {
+				pair->build();
+			}
+		};
 
 		void draw() {
 			for (ShaderObjectPairBase* pair : pairs) {

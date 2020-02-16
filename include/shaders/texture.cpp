@@ -5,7 +5,14 @@
 #include "shaders/texture.h"
 
 namespace gamo {
-    Texture::Texture(stbi_uc* data, int imageWidth, int imageHeight, int imageComponents) : data(data) {
+    Texture::Texture(stbi_uc* data, int imageWidth, int imageHeight, int imageComponents) :
+        imageWidth(imageWidth),
+        imageHeight(imageHeight),
+        imageComponents(imageComponents),
+        imageData(data) {
+    }
+
+    void Texture::load() {
         GLenum imageFormat;
         switch (imageComponents) {
         case 3:
@@ -27,7 +34,8 @@ namespace gamo {
             0,					//border
             imageFormat,	  	//data format
             GL_UNSIGNED_BYTE,	//data type
-            data);				//data
+            imageData);		    //data
+        loaded = true;
     }
 
     void Texture::bind() {
@@ -35,6 +43,11 @@ namespace gamo {
     }
 
     void Texture::use(int index) {
+        // Since this should be called from the draw-thread, it's the perfect time for gl-calls.
+        if (!loaded) {
+            load();
+        }
+
         switch (index) {
         case 1:
             glActiveTexture(GL_TEXTURE1);
@@ -44,12 +57,21 @@ namespace gamo {
             glActiveTexture(GL_TEXTURE0);
             break;
         }
+        
         bind();
+
+        if (parametersChanged) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterNearest ? GL_NEAREST : GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterNearest ? GL_NEAREST : GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeatTexture ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeatTexture ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+            parametersChanged = false;
+        }
     }
 
-    Texture* Texture::loadCached(const std::string& fileName, bool filterNearest, bool repeatTexture) {
+    Texture* Texture::ofCachedImage(const std::string& fileName, bool filterNearest, bool repeatTexture) {
         if (cache.find(fileName) == cache.end()) {
-            Texture* tex = loadImage(fileName, filterNearest, repeatTexture);
+            Texture* tex = ofImage(fileName, filterNearest, repeatTexture);
             if (tex != nullptr) {
                 cache[fileName] = tex;
             }
@@ -58,7 +80,7 @@ namespace gamo {
         return cache[fileName];
     }
 
-    Texture* Texture::loadImage(const std::string& filename, bool filterNearest, bool repeatTexture) {
+    Texture* Texture::ofImage(const std::string& filename, bool filterNearest, bool repeatTexture) {
         int width = -1;
         int height = -1;
         int depth = -1;
@@ -80,14 +102,12 @@ namespace gamo {
     }
 
     void Texture::setFilterNearest(bool nearest) {
-        bind();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, nearest ? GL_NEAREST : GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, nearest ? GL_NEAREST : GL_LINEAR);
+        filterNearest = nearest;
+        parametersChanged = true;
     }
 
     void Texture::setRepeatTexture(bool repeat) {
-        bind();
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+        repeatTexture = repeat;
+        parametersChanged = true;
     }
 }
