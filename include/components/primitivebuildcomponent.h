@@ -1,29 +1,36 @@
 #include "components/gameobjectcomponent.h"
 
 namespace gamo {
+    inline bool isInBox(glm::vec2 coord, glm::vec2 box) {
+        if (coord.x < 0 || coord.y < 0 || coord.x > box.x || coord.y >= box.y) {
+            return false;
+        }
+        return true;
+    }
+
     class TexturedCubeBuildComponent : public GameObjectComponent<VertexP3N3T2> {
     private:
         glm::vec3 cubeSize;
         glm::ivec2 tileCount;
 
     public:
-        int topIndex = -1;
-        int leftIndex = -1;
-        int frontIndex = -1;
-        int rightIndex = -1;
-        int backIndex = -1;
-        int bottomIndex = -1;
+        glm::vec2 topTileCoord;
+        glm::vec2 leftTileCoord;
+        glm::vec2 frontTileCoord;
+        glm::vec2 rightTileCoord;
+        glm::vec2 backTileCoord;
+        glm::vec2 bottomTileCoord;
 
-        TexturedCubeBuildComponent(glm::ivec2 textureTileCount, glm::vec3 size, std::vector<int> indices = { }) {
+        TexturedCubeBuildComponent(glm::ivec2 textureTileCount, glm::vec3 size, std::vector<glm::vec2> indices = { }) {
             cubeSize = size;
             tileCount = textureTileCount;
             if (indices.size() == 6) {
-                topIndex = indices[0];
-                leftIndex = indices[1];
-                frontIndex = indices[2];
-                rightIndex = indices[3];
-                backIndex = indices[4];
-                bottomIndex = indices[5];
+                topTileCoord = indices[0];
+                leftTileCoord = indices[1];
+                frontTileCoord = indices[2];
+                rightTileCoord = indices[3];
+                backTileCoord = indices[4];
+                bottomTileCoord = indices[5];
             }
         };
 
@@ -33,70 +40,70 @@ namespace gamo {
             double hd = cubeSize.z / 2;
             glm::vec2 ts = glm::vec2(1.0 / tileCount.x, 1.0 / tileCount.y);
 
-            if (topIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(topIndex % tileCount.x, topIndex / tileCount.x) * ts;
+            if (isInBox(topTileCoord, tileCount)) {
+                glm::vec2 tileCoord = topTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 1, 0), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
-            if (frontIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(frontIndex % tileCount.x, frontIndex / tileCount.x) * ts;
+            if (isInBox(frontTileCoord, tileCount)) {
+                glm::vec2 tileCoord = frontTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
-            if (rightIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(rightIndex % tileCount.x, rightIndex / tileCount.x) * ts;
+            if (isInBox(rightTileCoord, tileCount)) {
+                glm::vec2 tileCoord = rightTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw,  hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(1, 0, 0), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
-            if (bottomIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(bottomIndex % tileCount.x, bottomIndex / tileCount.x) * ts;
+            if (isInBox(bottomTileCoord, tileCount)) {
+                glm::vec2 tileCoord = bottomTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw, -hh,  hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, -1, 0), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
-            if (backIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(backIndex % tileCount.x, backIndex / tileCount.x) * ts;
+            if (isInBox(backTileCoord, tileCount)) {
+                glm::vec2 tileCoord = backTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3( hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(0, 0, -1), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
-            if (leftIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(leftIndex % tileCount.x, leftIndex / tileCount.x) * ts;
+            if (isInBox(leftTileCoord, tileCount)) {
+                glm::vec2 tileCoord = leftTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, 0)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
-                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y))
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh, -hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  hd), glm::vec3(-1, 0, 0), tileCoord + glm::vec2(ts.x, 0))
                     });
             }
         }
@@ -105,15 +112,18 @@ namespace gamo {
     class TexturedPaneBuildComponent : public GameObjectComponent<VertexP3N3T2> {
     private:
         glm::vec2 paneSize;
-        glm::ivec2 tileCount;
+        glm::vec2 tileCount;
 
     public:
-        int tileIndex = -1;
+        glm::vec2 frontTileCoord = glm::vec2(-1, -1);
 
-        TexturedPaneBuildComponent(glm::ivec2 textureTileCount, glm::vec2 size, int index = -1) {
-            paneSize = size;
-            tileCount = textureTileCount;
-            tileIndex = index;
+        TexturedPaneBuildComponent(glm::vec2 tileCount) : TexturedPaneBuildComponent(tileCount, glm::vec2(-1, -1), glm::vec2(1, 1)) { };
+        TexturedPaneBuildComponent(glm::vec2 tileCount, glm::vec2 paneSize) : TexturedPaneBuildComponent(tileCount, glm::vec2(), paneSize) { };
+
+        TexturedPaneBuildComponent(glm::vec2 tileCount, glm::vec2 tileCoord, glm::vec2 paneSize) {
+            this->paneSize = paneSize;
+            this->tileCount = tileCount;
+            this->frontTileCoord = tileCoord;
         };
 
         void onBuild(std::vector<VertexP3N3T2>& vertices) override {
@@ -121,16 +131,16 @@ namespace gamo {
             double hh = paneSize.y / 2;
             glm::vec2 ts = glm::vec2(1.0 / tileCount.x, 1.0 / tileCount.y);
 
-            if (tileIndex >= 0) {
-                glm::vec2 tileCoord = glm::vec2(tileIndex % tileCount.x, tileIndex / tileCount.x) * ts;
+            if (isInBox(frontTileCoord, tileCount)) {
+                glm::vec2 tileCoord = frontTileCoord * ts;
                 vertices.insert(vertices.end(), {
-                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
-                    VertexP3N3T2(glm::vec3(-hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
-                    VertexP3N3T2(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
-                    VertexP3N3T2(glm::vec3( hw,  hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0)),
-                    VertexP3N3T2(glm::vec3(-hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
-                    VertexP3N3T2(glm::vec3( hw, -hh, 0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y))
-                });
+                  VertexP3N3T2(glm::vec3( hw,  hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw,  hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw,  hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, ts.y)),
+                  VertexP3N3T2(glm::vec3(-hw, -hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(0, 0)),
+                  VertexP3N3T2(glm::vec3( hw, -hh,  0), glm::vec3(0, 0, 1), tileCoord + glm::vec2(ts.x, 0))
+                    });
             }
         }
     };
