@@ -212,6 +212,21 @@ namespace gamo {
 			}
 		};
 
+		GameObject<T>* findChildByTag(std::string tag) {
+			if (tag.empty()) {
+				return nullptr;
+			}
+
+			std::lock_guard<std::mutex> lock(childrenMutex);
+			for (GameObject<T>* child : children) {
+				if (child->tag == tag) {
+					return child;
+				}
+			}
+
+			return nullptr;
+		};
+
 		GameObjectComponent<T>* findComponentByTag(std::string tag) {
 			if (tag.empty()) {
 				return nullptr;
@@ -269,7 +284,17 @@ namespace gamo {
 		};
 
 		inline bool shouldRebuild() {
-			return dirty;
+			if (dirty) {
+				return true;
+			}
+
+			for (GameObject<T>* child : children) {
+				if (child->shouldRebuild()) {
+					return true;
+				}
+			}
+
+			return false;
 		};
 	};
 }

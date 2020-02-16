@@ -7,6 +7,7 @@ namespace gamo {
 	public:
 		virtual void build() = 0;
 		virtual void draw() = 0;
+		virtual bool shouldRebuild() = 0;
 		virtual void update(double elapsedSeconds) = 0;
 	};
 
@@ -34,6 +35,10 @@ namespace gamo {
 			group->draw(shader);
 		};
 
+		bool shouldRebuild() override {
+			return group->shouldRebuild();
+		};
+
 		void update(double elapsedSeconds) override {
 			group->update(elapsedSeconds);
 		};
@@ -53,6 +58,15 @@ namespace gamo {
 			for (ShaderObjectPairBase* pair : pairs) {
 				pair->draw();
 			}
+		};
+
+		bool shouldRebuild() {
+			for (ShaderObjectPairBase* pair : pairs) {
+				if (pair->shouldRebuild()) {
+					return true;
+				}
+			}
+			return false;
 		};
 
 		void update(double elapsedSeconds) {
