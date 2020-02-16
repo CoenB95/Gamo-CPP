@@ -10,7 +10,7 @@ namespace gamo {
 	template<class T>
 	class GameObjectComponent {
 	protected:
-		GameObject<T>* parentObject;
+		GameObject<T>* parentObject = nullptr;
 
 	public:
 		const std::string tag;

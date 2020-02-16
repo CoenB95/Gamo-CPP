@@ -9,7 +9,7 @@ namespace gamo {
         GLenum imageFormat;
         switch (imageComponents) {
         case 3:
-            imageFormat = GL_RGB;
+            imageFormat = GL_RGBA; // Not sure why..
             break;
         default:
         case 4:
@@ -63,6 +63,7 @@ namespace gamo {
         int height = -1;
         int depth = -1;
 
+        stbi_set_flip_vertically_on_load(true);
         stbi_uc* data = stbi_load(filename.c_str(), &width, &height, &depth, 4);
 
         if (data == nullptr) {

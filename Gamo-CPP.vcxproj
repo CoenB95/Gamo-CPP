@@ -22,6 +22,7 @@
     <ClInclude Include="include\components\despawncomponent.h" />
     <ClInclude Include="include\components\followcomponent.h" />
     <ClInclude Include="include\components\gameobjectcomponent.h" />
+    <ClInclude Include="include\components\modelcomponent.h" />
     <ClInclude Include="include\components\primitivebuildcomponent.h" />
     <ClInclude Include="include\components\primitivedrawcomponent.h" />
     <ClInclude Include="include\components\smoothcomponent.h" />
@@ -35,6 +36,7 @@
     <ClInclude Include="include\shaders\vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\components\modelcomponent.cpp" />
     <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
     <ClCompile Include="include\objects\cube.cpp" />
     <ClCompile Include="include\objects\pane.cpp" />
