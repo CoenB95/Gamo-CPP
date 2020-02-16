@@ -32,13 +32,14 @@ namespace gamo {
 		};
 
 		std::string filename;
+		float scale;
 		std::vector<GroupInfo*> groups;
 		std::vector<MaterialInfo*> materials;
 		GLuint _vertexArray;
 
 	public:
-		ModelComponent(std::string filename);
-		~ModelComponent(void);
+		ModelComponent(std::string filename, float scale = 1.0);
+		~ModelComponent();
 
 		void onBuild(std::vector<VertexP3N3T2>& vertices) override;
 		void onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) override;

@@ -139,7 +139,7 @@ namespace gamo {
 		return glm::vec4(t[0], t[1], t[2], handedness);
 	}
 
-	ModelComponent::ModelComponent(std::string fileName) : filename(fileName) {
+	ModelComponent::ModelComponent(std::string fileName, float scale) : filename(fileName), scale(scale) {
 
 	}
 
@@ -246,7 +246,7 @@ namespace gamo {
 							n[1] = normals[(atoi(indices[2].c_str()) - 1) * 3 + 1];
 							n[2] = normals[(atoi(indices[2].c_str()) - 1) * 3 + 2];
 						}
-						vertices.push_back(VertexP3N3T2(glm::vec3(p[0], p[1], p[2]), glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1])));
+						vertices.push_back(VertexP3N3T2(glm::vec3(p[0], p[1], p[2]) * scale, glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1])));
 						//vertices.push_back(VertexP3N3T2A4(glm::vec3(p[0], p[1], p[2]), glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1]),
 						//	glm::vec4(tangent[0], tangent[1], tangent[2], tangent[3]));
 
