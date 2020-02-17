@@ -3,13 +3,12 @@
 #include "components/gameobjectcomponent.h"
 
 namespace gamo {
-	template<class T>
-	class SpinComponent : public GameObjectComponent<T> {
+	class SpinComponent : public GameObjectComponent {
 	private:
 		glm::vec3 radiansPerSec;
 
 	public:
-		SpinComponent(glm::vec3 degreesPerSec, std::string tag = "") : GameObjectComponent<T>(tag) {
+		SpinComponent(glm::vec3 degreesPerSec, std::string tag = "") : GameObjectComponent(tag) {
 			radiansPerSec = glm::radians(degreesPerSec);
 		};
 

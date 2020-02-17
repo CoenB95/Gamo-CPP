@@ -9,7 +9,7 @@
 #include "shaders/texture.h"
 
 namespace gamo {
-	class ModelComponent : public GameObjectComponent<VertexP3N3T2> {
+	class ModelComponent : public GameObjectDrawComponent<VertexP3N3T2> {
 	private:
 		class MaterialInfo {
 		public:

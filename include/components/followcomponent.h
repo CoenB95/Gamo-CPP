@@ -5,14 +5,14 @@
 namespace gamo {
 	class FollowComponent : public GameObjectComponent {
 	private:
-		GameObject* subject;
+		GameObjectBase* subject;
 		
 		const bool rotate;
 		const bool scale;
 		const bool translate;
 
 	public:
-		FollowComponent(GameObject* subject, bool translate = false, bool scale = false, bool rotate = false) :
+		FollowComponent(GameObjectBase* subject, bool translate = false, bool scale = false, bool rotate = false) :
 				GameObjectComponent(),
 				subject(subject),
 				translate(translate),

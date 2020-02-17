@@ -8,7 +8,7 @@ namespace gamo {
 		virtual void build() = 0;
 		virtual void draw() = 0;
 		virtual bool shouldRebuild() = 0;
-		virtual void update(double elapsedSeconds) = 0;
+		virtual void update(float elapsedSeconds) = 0;
 	};
 
 	template<class T>
@@ -39,7 +39,7 @@ namespace gamo {
 			return group->shouldRebuild();
 		};
 
-		void update(double elapsedSeconds) override {
+		void update(float elapsedSeconds) override {
 			group->update(elapsedSeconds);
 		};
 	};
@@ -69,7 +69,7 @@ namespace gamo {
 			return false;
 		};
 
-		void update(double elapsedSeconds) {
+		void update(float elapsedSeconds) {
 			for (ShaderObjectPairBase* pair : pairs) {
 				pair->update(elapsedSeconds);
 			}

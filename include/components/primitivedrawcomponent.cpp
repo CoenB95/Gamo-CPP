@@ -15,7 +15,7 @@ namespace gamo {
 		shader->draw(parentObject->vertices, transform, DrawMode::TRIANGLES);
 	}
 
-	TextureDrawComponent::TextureDrawComponent(const std::string& fileName, bool filterNearest, bool repeatTexture) : GameObjectComponent() {
+	TextureDrawComponent::TextureDrawComponent(const std::string& fileName, bool filterNearest, bool repeatTexture) : GameObjectDrawComponent() {
 		texture = Texture::ofCachedImage(fileName, filterNearest, repeatTexture);
 	}
 

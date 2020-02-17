@@ -10,7 +10,7 @@ namespace gamo {
         return true;
     }
 
-    class TexturedCubeBuildComponent : public GameObjectComponent<VertexP3N3T2> {
+    class TexturedCubeBuildComponent : public GameObjectDrawComponent<VertexP3N3T2> {
     private:
         glm::vec3 cubeSize;
         glm::ivec2 tileCount;
@@ -28,7 +28,7 @@ namespace gamo {
         void onBuild(std::vector<VertexP3N3T2>& vertices) override;
     };
 
-    class TexturedPaneBuildComponent : public GameObjectComponent<VertexP3N3T2> {
+    class TexturedPaneBuildComponent : public GameObjectDrawComponent<VertexP3N3T2> {
     private:
         glm::vec2 paneSize;
         glm::vec2 tileCount;
@@ -43,7 +43,7 @@ namespace gamo {
         void onBuild(std::vector<VertexP3N3T2>& vertices) override;
     };
 
-    class ColoredCubeBuildComponent : public GameObjectComponent<VertexP3N3C4> {
+    class ColoredCubeBuildComponent : public GameObjectDrawComponent<VertexP3N3C4> {
     private:
         glm::vec3 size;
 
@@ -62,7 +62,7 @@ namespace gamo {
         void onBuild(std::vector<VertexP3N3C4>& vertices) override;
     };
 
-    class ColoredPaneBuildComponent : public GameObjectComponent<VertexP3N3C4> {
+    class ColoredPaneBuildComponent : public GameObjectDrawComponent<VertexP3N3C4> {
     private:
         glm::vec2 paneSize;
 
