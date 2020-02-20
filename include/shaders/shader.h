@@ -78,19 +78,19 @@ namespace gamo {
 
         bool checkShaderErrors(GLuint shaderId) {
             GLint status;
-            glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);					//kijk of het compileren is gelukt
-            if (status == GL_FALSE)
-            {
-                int length, charsWritten;
-                glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);				//haal de lengte van de foutmelding op
-                char* infolog = new char[length + 1];
-                memset(infolog, 0, length + 1);
-                glGetShaderInfoLog(shaderId, length, &charsWritten, infolog);		//en haal de foutmelding zelf op
-                std::cout << "Error compiling shader:\n" << infolog << std::endl;
-                delete[] infolog;
-                return true;
-            }
-            return false;
+            glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
+            return status == GL_FALSE;
+        }
+
+        std::string getShaderLog(GLuint shaderId) {
+            int length, charsWritten;
+            glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
+            char* infolog = new char[length + 1];
+            memset(infolog, 0, length + 1);
+            glGetShaderInfoLog(shaderId, length, &charsWritten, infolog);
+            std::string log(infolog);
+            delete[] infolog;
+            return log;
         }
 
     public:
@@ -107,6 +107,7 @@ namespace gamo {
 
         void initFromFiles(const std::string& vertShaderFileName, const std::string& fragShaderFileName,
             AttribArray<T>* attributeArray, const std::vector<Uniform*>& uniforms) {
+            std::cout << "Compiling shader '" << vertShaderFileName << "'.." << std::endl;
             initFromSources(readShaderFile(vertShaderFileName), readShaderFile(fragShaderFileName), attributeArray, uniforms);
         };
 
@@ -119,22 +120,24 @@ namespace gamo {
             const char* fragSrc = fragShaderSrc.c_str();
             glShaderSource(fragShaderId, 1, &fragSrc, NULL);
             glCompileShader(fragShaderId);
-            if (checkShaderErrors(fragShaderId))
-            {
-                glDeleteProgram(programId);
-                programId = -1;
-                throw std::invalid_argument("Could not find attribute '${attrib.name}'");
+            std::string fragLog = getShaderLog(fragShaderId);
+            if (!fragLog.empty()) {
+                std::cout << "Fragment shader log:\n" << fragLog;
+            }
+            if (checkShaderErrors(fragShaderId)) {
+                throw std::invalid_argument("Error compiling fragment shader! (log above)");
             }
 
             vertShaderId = glCreateShader(GL_VERTEX_SHADER);
             const char* vertSrc = vertShaderSrc.c_str();
             glShaderSource(vertShaderId, 1, &vertSrc, NULL);
             glCompileShader(vertShaderId);
-            if (checkShaderErrors(vertShaderId))
-            {
-                glDeleteProgram(programId);
-                programId = -1;
-                throw std::invalid_argument("Could not find attribute '${attrib.name}'");
+            std::string vertLog = getShaderLog(vertShaderId);
+            if (!vertLog.empty()) {
+                std::cout << "Vertex shader log:\n" << vertLog;
+            }
+            if (checkShaderErrors(vertShaderId)) {
+                throw std::invalid_argument("Error compiling vertex shader! (log above)");
             }
 
             programId = glCreateProgram();
