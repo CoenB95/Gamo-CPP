@@ -31,6 +31,16 @@ namespace gamo {
         texCoord(texCoord) {
     }
 
+    VertexP3N3T2B3::VertexP3N3T2B3() : VertexP3N3T2B3(glm::vec3(), glm::vec3(), glm::vec2(), glm::vec3()) {
+
+    }
+
+    VertexP3N3T2B3::VertexP3N3T2B3(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& texCoord, const glm::vec3& tangent) :
+        position(position),
+        normal(normal),
+        texCoord(texCoord),
+        tangent(tangent) {
+    }
 
     Attribute::Attribute(std::string name, GLint size, GLenum type) : name(name), size(size), type(type), bytes(calcBytes(type)) {
 

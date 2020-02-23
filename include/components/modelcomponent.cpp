@@ -113,8 +113,8 @@ namespace gamo {
 			det = 1.0f / det;
 
 			t[0] = (texEdge2[1] * edge1[0] - texEdge1[1] * edge2[0]) * det;
-			t[1] = (texEdge2[1] * edge1[1] - texEdge1[1] * edge2[0]) * det;
-			t[2] = (texEdge2[1] * edge1[2] - texEdge1[1] * edge2[0]) * det;
+			t[1] = (texEdge2[1] * edge1[1] - texEdge1[1] * edge2[1]) * det;
+			t[2] = (texEdge2[1] * edge1[2] - texEdge1[1] * edge2[2]) * det;
 
 			b[0] = (-texEdge2[0] * edge1[0] + texEdge1[0] * edge2[0]) * det;
 			b[1] = (-texEdge2[0] * edge1[1] + texEdge1[0] * edge2[1]) * det;
@@ -136,6 +136,7 @@ namespace gamo {
 
 		glm::vec3 bitangent = glm::cross(normal, t);
 		float handedness = (glm::dot(bitangent, b) < 0.0f) ? -1.0f : 1.0f;
+		t *= handedness;
 
 		return glm::vec4(t[0], t[1], t[2], handedness);
 	}
@@ -144,7 +145,7 @@ namespace gamo {
 
 	}
 
-	void ModelComponent::onBuild(std::vector<VertexP3N3T2>& vertices) {
+	void ModelComponent::onBuild(std::vector<VertexP3N3T2B3>& vertices) {
 		std::string dirName = filename;
 		if (dirName.rfind("/") != std::string::npos)
 			dirName = dirName.substr(0, dirName.rfind("/"));
@@ -250,7 +251,11 @@ namespace gamo {
 
 						{
 							std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
-							vertices.push_back(VertexP3N3T2(glm::vec3(p[0], p[1], p[2]) * scale, glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1])));
+							vertices.push_back(VertexP3N3T2B3(
+								glm::vec3(p[0], p[1], p[2]),
+								glm::vec3(n[0], n[1], n[2]),
+								glm::vec2(t[0], t[1]),
+								glm::vec3(tangent[0], tangent[1], tangent[2])));
 						}
 						//vertices.push_back(VertexP3N3T2A4(glm::vec3(p[0], p[1], p[2]), glm::vec3(n[0], n[1], n[2]), glm::vec2(t[0], t[1]),
 						//	glm::vec4(tangent[0], tangent[1], tangent[2], tangent[3]));
@@ -331,7 +336,7 @@ namespace gamo {
 
 	}
 
-	void ModelComponent::onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) {
+	void ModelComponent::onDraw(Shader<VertexP3N3T2B3>* shader, const glm::mat4& transform) {
 		//glBindVertexArray(_vertexArray);
 		std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 		for (size_t i = 0; i < groups.size(); i++)
@@ -352,7 +357,7 @@ namespace gamo {
 			}
 
 			//glDrawArrays(GL_TRIANGLES, group->start, group->end - group->start);
-			std::vector<VertexP3N3T2> groupVertices;
+			std::vector<VertexP3N3T2B3> groupVertices;
 			groupVertices.insert(groupVertices.end(), parentObject->vertices.begin() + group->start, parentObject->vertices.begin() + group->end);
 			shader->draw(groupVertices, transform, DrawMode::TRIANGLES);
 		}

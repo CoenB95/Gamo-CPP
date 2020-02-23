@@ -38,6 +38,16 @@ namespace gamo {
         VertexP3N3T2(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& texCoord);
     };
 
+    struct VertexP3N3T2B3 : public Vertex {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec2 texCoord;
+        glm::vec3 tangent;
+
+        VertexP3N3T2B3();
+        VertexP3N3T2B3(const glm::vec3& position, const glm::vec3& normal, const glm::vec2& texCoord, const glm::vec3& tangent);
+    };
+
     class Attribute {
     private:
         Attribute(std::string name, GLint size, GLenum type);
@@ -105,6 +115,10 @@ namespace gamo {
 
         inline static AttribArray<VertexP3N3T2>* p3n3t2(const std::string& p3, const std::string& n3, const std::string& t2) {
             return new AttribArray<VertexP3N3T2>({ Attribute::vec3(p3), Attribute::vec3(n3), Attribute::vec2(t2) });
+        };
+
+        inline static AttribArray<VertexP3N3T2B3>* p3n3t2b3(const std::string& p3, const std::string& n3, const std::string& t2, const std::string& b3) {
+            return new AttribArray<VertexP3N3T2B3>({ Attribute::vec3(p3), Attribute::vec3(n3), Attribute::vec2(t2), Attribute::vec3(b3) });
         };
     };
 }

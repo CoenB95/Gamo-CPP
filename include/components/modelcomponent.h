@@ -9,7 +9,7 @@
 #include "shaders/texture.h"
 
 namespace gamo {
-	class ModelComponent : public GameObjectDrawComponent<VertexP3N3T2> {
+	class ModelComponent : public GameObjectDrawComponent<VertexP3N3T2B3> {
 	private:
 		class MaterialInfo {
 		public:
@@ -41,8 +41,8 @@ namespace gamo {
 		ModelComponent(std::string filename, float scale = 1.0);
 		~ModelComponent();
 
-		void onBuild(std::vector<VertexP3N3T2>& vertices) override;
-		void onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) override;
+		void onBuild(std::vector<VertexP3N3T2B3>& vertices) override;
+		void onDraw(Shader<VertexP3N3T2B3>* shader, const glm::mat4& transform) override;
 
 		void loadMaterialFile(std::string fileName, std::string dirName);
 	};
