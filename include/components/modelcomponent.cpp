@@ -252,7 +252,7 @@ namespace gamo {
 						{
 							std::lock_guard<std::mutex> lock(parentObject->verticesMutex);
 							vertices.push_back(VertexP3N3T2B3(
-								glm::vec3(p[0], p[1], p[2]),
+								glm::vec3(p[0], p[1], p[2]) * scale,
 								glm::vec3(n[0], n[1], n[2]),
 								glm::vec2(t[0], t[1]),
 								glm::vec3(tangent[0], tangent[1], tangent[2])));
