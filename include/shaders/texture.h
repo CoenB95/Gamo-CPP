@@ -26,11 +26,16 @@ namespace gamo {
         void load();
 
     public:
-        void bind();
-        void use(int index = 0);
+        static Texture* empty(int width, int height, int components = 4);
         static Texture* ofCachedImage(const std::string& fileName, bool filterNearest = false, bool repeatTexture = true);
         static Texture* ofImage(const std::string& filename, bool filterNearest, bool repeatTexture);
+
+        void bind();
+        inline GLuint getHeight() { return imageHeight; };
+        inline GLuint getId() { return id; };
+        inline GLuint getWidth() { return imageWidth; };
         void setFilterNearest(bool nearest);
         void setRepeatTexture(bool repeat);
+        void use(int index = 0);
     };
 }

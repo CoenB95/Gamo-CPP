@@ -14,6 +14,7 @@ namespace gamo {
 		Texture* texture;
 
 	public:
+		TextureDrawComponent(Texture* texture) : texture(texture) { };
 		TextureDrawComponent(const std::string& fileName, bool filterNearest = true , bool repeatTexture = false);
 
 		void onDraw(Shader<VertexP3N3T2>* shader, const glm::mat4& transform) override;

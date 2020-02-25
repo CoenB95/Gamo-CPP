@@ -69,6 +69,10 @@ namespace gamo {
         }
     }
 
+    Texture* Texture::empty(int width, int height, int components) {
+        return new Texture(nullptr, width, height, components);
+    }
+
     Texture* Texture::ofCachedImage(const std::string& fileName, bool filterNearest, bool repeatTexture) {
         if (cache.find(fileName) == cache.end()) {
             Texture* tex = ofImage(fileName, filterNearest, repeatTexture);

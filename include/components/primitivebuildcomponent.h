@@ -36,7 +36,7 @@ namespace gamo {
     public:
         glm::vec2 frontTileCoord = glm::vec2(-1, -1);
 
-        TexturedPaneBuildComponent(glm::vec2 tileCount) : TexturedPaneBuildComponent(tileCount, glm::vec2(-1, -1), glm::vec2(1, 1)) { };
+        TexturedPaneBuildComponent(glm::vec2 tileCount) : TexturedPaneBuildComponent(tileCount, glm::vec2(0, 0), glm::vec2(1, 1)) { };
         TexturedPaneBuildComponent(glm::vec2 tileCount, glm::vec2 paneSize) : TexturedPaneBuildComponent(tileCount, glm::vec2(), paneSize) { };
         TexturedPaneBuildComponent(glm::vec2 tileCount, glm::vec2 tileCoord, glm::vec2 paneSize);
 

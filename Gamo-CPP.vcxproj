@@ -31,6 +31,7 @@
     <ClInclude Include="include\objects\gameobject.h" />
     <ClInclude Include="include\objects\pane.h" />
     <ClInclude Include="include\scenes\gamescene.h" />
+    <ClInclude Include="include\shaders\fbo.h" />
     <ClInclude Include="include\shaders\shader.h" />
     <ClInclude Include="include\shaders\texture.h" />
     <ClInclude Include="include\shaders\vertex.h" />
@@ -41,6 +42,7 @@
     <ClCompile Include="include\components\primitivedrawcomponent.cpp" />
     <ClCompile Include="include\objects\cube.cpp" />
     <ClCompile Include="include\objects\pane.cpp" />
+    <ClCompile Include="include\shaders\fbo.cpp" />
     <ClCompile Include="include\shaders\texture.cpp" />
     <ClCompile Include="include\shaders\vertex.cpp" />
   </ItemGroup>
