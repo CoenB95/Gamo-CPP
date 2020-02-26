@@ -12,7 +12,7 @@ namespace gamo {
 		texture = Texture::empty(width, height);
 		texture->setFilterNearest(false);
 		texture->setRepeatTexture(false);
-		texture->bind();
+		texture->use();
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->getId(), 0);
 
 		// Create and attach Renderbuffer (storing depth) to FBO
@@ -21,7 +21,6 @@ namespace gamo {
 		glBindRenderbuffer(GL_RENDERBUFFER, rboId);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboId);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 		unbind();
 	}
