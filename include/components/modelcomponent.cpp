@@ -351,7 +351,7 @@ namespace gamo {
 			}
 			if (material->bumpMap != NULL)
 			{
-				material->texture->use(1);
+				material->bumpMap->use(1);
 				//glActiveTexture(GL_TEXTURE1);
 				//glBindTexture(GL_TEXTURE_2D, material->bumpMap->textureId);
 			}
