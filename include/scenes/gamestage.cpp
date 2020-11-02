@@ -1,5 +1,8 @@
+#define _USE_MATH_DEFINES
+
 #include <gl/glew.h>
 #include <gl/freeglut.h>
+#include <math.h>
 
 #include "objects/gameobject.h"
 #include "components/followcomponent.h"
@@ -46,6 +49,7 @@ namespace gamo
         glutReshapeFunc([](int w, int h){ GameStageGL::getInstance()->reshape(w, h); });
         glutKeyboardFunc([](uint8_t key, int x, int y){ GameStageGL::getInstance()->keyboard(key, x, y); });
         glutKeyboardUpFunc([](uint8_t key, int x, int y){ GameStageGL::getInstance()->keyboardUp(key, x, y); });
+        glutPassiveMotionFunc([](int x, int y){ GameStageGL::getInstance()->mouse(x, y); });
         glutIdleFunc([](){ GameStageGL::getInstance()->update(); });
 
         lastTimeMillis = glutGet(GLUT_ELAPSED_TIME);
@@ -59,8 +63,9 @@ namespace gamo
         
         player = new GameObject<VertexP3N3C4>();
         camera = new GameObject<VertexP3N3C4>();
-        camera->addComponent(new FollowComponent(player, true, false, false));
-        camera->addComponent(new SmoothComponent(0.9f, false, false, true));
+        camera->addComponent(new FollowComponent(player, true, false, true));
+        camera->addComponent(new SmoothComponent(0.1f, false, false, true));
+        camera->addComponent(new SmoothComponent(0.8f, true, false, false));
 
         postProcessingPane = new GameObject<VertexP3N3T2>();
         postProcessingPane->addComponent(new TexturedPaneBuildComponent(glm::vec2(1, 1), glm::vec2(3, 3)));
@@ -107,7 +112,7 @@ namespace gamo
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         projectionMatrix = glm::perspective(80.0f, screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-        viewMatrix = glm::lookAt(camera->position, camera->position + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0));
+        viewMatrix = glm::lookAt(camera->position, camera->position + camera->orientation * glm::vec3(0, 0, -1), glm::vec3(0, -1, 0));
 
         scene->draw();
     }
@@ -118,7 +123,7 @@ namespace gamo
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         projectionMatrix = glm::perspective(80.0f, screenSize.x / (float)screenSize.y, 0.01f, 100.0f);
-        viewMatrix = glm::lookAt(camera->position, camera->position + glm::vec3(0, 0, -1), glm::vec3(0, -1, 0));
+        viewMatrix = glm::lookAt(camera->position, camera->position + camera->orientation * glm::vec3(0, 0, -1), glm::vec3(0, -1, 0));
 
         postShader->use();
         postProcessingPane->draw(postShader);
@@ -137,6 +142,19 @@ namespace gamo
     const glm::mat4& GameStageGL::getViewMatrix() const
     {
         return viewMatrix;
+    }
+
+    void GameStageGL::mouse(int x, int y)
+    {
+        if (wrap)
+        {
+            int dx = x - screenSize.x / 2;
+            int dy = y - screenSize.y / 2;
+            std::cout << "MOUSE " << dx << ", " << dy;
+            mouseVal += glm::vec2(dx * 0.004f, dy * 0.003f);
+            player->orientation = glm::quat(glm::vec3((-mouseVal.y), (-mouseVal.x), 0));
+            glutWarpPointer(screenSize.x / 2, screenSize.y / 2);
+        }
     }
 
     void GameStageGL::setScene(GameScene* scene)
@@ -173,27 +191,35 @@ namespace gamo
         lastTimeMillis = timeMillis;
         
         glm::vec3 veloc(0, 0, 0);
+        bool fast = false;
+        auto dir = player->orientation;
         if (keys['w'])
-            veloc += glm::vec3(0, 0, -1);
+            veloc += dir * glm::vec3(0, 0, -1);
 
         if (keys['a'])
-            veloc += glm::vec3(-1, 0, 0);
+            veloc += dir * glm::vec3(-1, 0, 0);
 
         if (keys['s'])
-            veloc += glm::vec3(0, 0, 1);
+            veloc += dir * glm::vec3(0, 0, 1);
 
         if (keys['d'])
-            veloc += glm::vec3(1, 0, 0);
+            veloc += dir * glm::vec3(1, 0, 0);
 
         if (keys['z'])
             veloc += glm::vec3(0, -1, 0);
+
+        if (keys['q'])
+            wrap = !wrap;
+        
+        if (keys['e'])
+            fast = true;
 
         if (keys[VK_SPACE])
             veloc += glm::vec3(0, 1, 0);
 
         glm::normalize(veloc);
         veloc *= 0.1;
-        player->position += veloc;
+        player->position += (fast ? veloc * 3.0f : veloc);
 
         scene->update(elapsedMillis / 1000.0f);
         camera->update(elapsedMillis / 1000.0f);

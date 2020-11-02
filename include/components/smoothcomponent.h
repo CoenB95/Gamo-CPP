@@ -31,15 +31,15 @@ namespace gamo {
 
         void onUpdate(float elapsedSeconds) override {
             if (rotate) {
-                parentObject->orientation = glm::slerp(previousOrientation, parentObject->orientation, elapsedSeconds * snappyness);
+                parentObject->orientation = glm::slerp(previousOrientation, parentObject->orientation, snappyness);
             }
 
             if (scale) {
-                parentObject->scale = glm::mix(previousScale, parentObject->scale, elapsedSeconds * snappyness);
+                parentObject->scale = glm::mix(previousScale, parentObject->scale, snappyness);
             }
 
             if (translate) {
-                parentObject->position = glm::mix(previousPosition, parentObject->position, elapsedSeconds * snappyness);
+                parentObject->position = glm::mix(previousPosition, parentObject->position, snappyness);
             }
 
             previousOrientation = parentObject->orientation;

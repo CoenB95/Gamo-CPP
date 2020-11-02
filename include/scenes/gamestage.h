@@ -24,6 +24,8 @@ namespace gamo
 
         std::map<char, bool> keys {};
         glm::ivec2 screenSize {};
+        bool wrap = false;
+        glm::vec2 mouseVal {};
 
         Shader<VertexP3N3T2>* postShader = nullptr;
         GameObject<VertexP3N3T2>* postProcessingPane = nullptr;
@@ -34,6 +36,7 @@ namespace gamo
         void reshape(int newWidth, int newHeight);
         void keyboardUp(unsigned char key, int x, int y);
         void keyboard(unsigned char key, int x, int y);
+        void mouse(int x, int y);
         void display();
         void displayScene(GLsizei w, GLsizei h);
         void displaySceneTexture(GLsizei w, GLsizei h);
