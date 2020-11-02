@@ -17,7 +17,7 @@ namespace gamo {
     }
 
     GameObject<VertexP3N3T2>* Cubes::mc(float size, std::vector<glm::vec2> indices) {
-        return textured("libs/gamo/res/terrain.png", glm::ivec2(16, 16), glm::vec3(size), indices);
+        return textured("resources/textures/terrain.png", glm::ivec2(16, 16), glm::vec3(size), indices);
     }
 
     GameObject<VertexP3N3T2>* Cubes::textured(std::string filename, glm::ivec2 tileCount, glm::vec3 size, std::vector<glm::vec2> indices) {

@@ -1,10 +1,14 @@
+#ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
+#endif // !STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
 
 #include "shaders/texture.h"
 
 namespace gamo {
+    std::map<std::string, Texture*> Texture::cache {};
+
     Texture::Texture(stbi_uc* data, int imageWidth, int imageHeight, int imageComponents) :
         imageWidth(imageWidth),
         imageHeight(imageHeight),

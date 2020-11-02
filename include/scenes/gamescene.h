@@ -32,7 +32,7 @@ namespace gamo {
 			}
 
 			shader->use();
-			group->draw(shader);
+			group->draw(shader, glm::identity<glm::mat4>());
 		};
 
 		bool shouldRebuild() override {
@@ -46,7 +46,7 @@ namespace gamo {
 
 	class GameScene {
 	public:
-		std::vector<ShaderObjectPairBase*> pairs;
+		std::vector<ShaderObjectPairBase*> pairs {};
 
 		void build() {
 			for (ShaderObjectPairBase* pair : pairs) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/gameobjectcomponent.h"
+#include "objects/gameobject.h"
 
 namespace gamo {
 	class FollowComponent : public GameObjectComponent {

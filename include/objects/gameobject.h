@@ -12,6 +12,7 @@
 namespace gamo {
 	class GameObjectBase {
 	protected:
+		bool buildsChildrenStandalone = false;
 		std::vector<GameObjectBase*> children;
 		std::mutex childrenMutex;
 		std::vector<GameObjectComponent*> components;
@@ -108,6 +109,16 @@ namespace gamo {
 				components.push_back(component);
 			}
 		};
+
+		void buildChildrenEmbedded()
+		{
+			buildsChildrenStandalone = false;
+		}
+
+		void buildChildrenStandalone()
+		{
+			buildsChildrenStandalone = true;
+		}
 
 		void deleteAllChildren() {
 			std::lock_guard<std::mutex> lock(childrenMutex);
@@ -275,7 +286,7 @@ namespace gamo {
 			}
 			for (GameObjectBase* child : childrenCopy) {
 				if (child->shouldRebuild()) {
-					if (standaloneChildren) {
+					if (standaloneChildren || buildsChildrenStandalone) {
 						child->build();
 					} else {
 						GameObject<T>* vertexChild = dynamic_cast<GameObject<T>*>(child);
